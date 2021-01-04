@@ -2,7 +2,6 @@ import * as React from "react";
 import Canvas from "./Canvas";
 import Equation from "./Equations";
 import { eq1 } from "./ifs";
-import TextField from "@material-ui/core/TextField";
 import { Typography, Slider } from "@material-ui/core";
 
 function App() {
