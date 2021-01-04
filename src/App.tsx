@@ -34,6 +34,9 @@ function App() {
         <div>
             <Canvas iterations={iterations} equation={equation}></Canvas>
         </div>
+        <div>
+            Inspired by <a href="http://paulbourke.net/fractals/ifs/">this</a> post by Paul Bourke.
+        </div>
     </>
 );
 }
