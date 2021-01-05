@@ -4,22 +4,19 @@ import { Slider, Typography } from "@material-ui/core";
 
 interface Props {
   equation: IFSEquation;
-  onUpdateEquation: (equation: IFSEquation) => void
+  onUpdateEquation: (equation: IFSEquation) => void;
 }
 
 function SingleCoefficent(props: {
   name: string;
-  initValue: number;
+  value: number;
   onUpdateCoeff: (newValue: number) => void;
 }) {
-  const [value, setValue] = React.useState(props.initValue);
-
   const handleSliderChange = (
     _: React.ChangeEvent<{}>,
     newValue: number | number[]
   ) => {
     props.onUpdateCoeff(newValue as number);
-    setValue(newValue as number);
   };
   const id = `${props.name}-slider`;
   return (
@@ -27,7 +24,7 @@ function SingleCoefficent(props: {
       <Typography id={id}>{props.name}</Typography>
       <Slider
         aria-labelledby={id}
-        value={typeof value === "number" ? value : 0}
+        value={props.value}
         onChange={handleSliderChange}
         min={-1}
         max={1}
@@ -45,14 +42,13 @@ function Coefficient(props: {
 }) {
   const { coeff, probability, index, onUpdateCoefficient } = props;
 
-
   const entries = Object.entries(coeff);
 
   const coeffs = entries.map((e) => (
     <SingleCoefficent
       key={e[0]}
       name={e[0]}
-      initValue={e[1]}
+      value={e[1]}
       onUpdateCoeff={(newVal: number) =>
         onUpdateCoefficient({ ...coeff, [e[0]]: newVal })
       }
@@ -71,7 +67,7 @@ function Coefficient(props: {
 export default function Equation(props: Props) {
   const {
     equation: { probabilities },
-    onUpdateEquation
+    onUpdateEquation,
   } = props;
 
   const coefficientSet = props.equation.coefficients.map((co, idx) => {
