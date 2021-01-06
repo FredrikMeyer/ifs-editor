@@ -105,6 +105,7 @@ function draw(
     const [x, y] = drawer.toCanvasCoords(pt);
 
     // See https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
+    // Might give wrong result if run on a big endian processor
     data[y * canvasData.width + x] =
       (255 << 24) | (color.blue << 16) | (color.green << 8) | color.red;
   }
