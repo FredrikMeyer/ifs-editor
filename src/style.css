@@ -6,6 +6,14 @@ body {
     padding-top: 10px;
 }
 
+.settingsAndCanvas {
+    display: flex;
+}
+
+.settings {
+    padding: 10px;
+}
+
 .iterationsSlider {
     width: 500px;
 }
@@ -18,9 +26,33 @@ body {
 .coefficientSet {
     width: 300px;
     padding: 10px;
+    padding-top: 0px;
+    /* border: 1px dotted gray; */
+    margin: 10px;
+}
+
+.coefficientSet .deleteIcon {
+    float: right;
+}
+
+.equationHeader {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.equationContent {
+    width: 100%;
 }
 
 .coefficients {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+}
+
+.selectAndAdd {
+    padding-left: 5px;
+    padding-right: 5px;
+    display: flex;
+    justify-content: space-between;
 }

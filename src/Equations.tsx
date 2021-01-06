@@ -1,6 +1,13 @@
 import * as React from "react";
-import { IFSEquation, IFSCoefficent } from "./ifs";
+import { IFSEquation, IFSCoefficients } from "./ifs";
 import { Slider, Typography } from "@material-ui/core";
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
+import IconButton from "@material-ui/core/IconButton";
+
+import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 interface Props {
   equation: IFSEquation;
@@ -35,14 +42,15 @@ function SingleCoefficent(props: {
 }
 
 function Coefficient(props: {
-  coeff: IFSCoefficent;
+  coeff: IFSCoefficients;
   index: number;
   probability: number;
-  onUpdateCoefficient: (newVal: IFSCoefficent) => void;
+  onUpdateCoefficient: (newVal: IFSCoefficients) => void;
+  onClickDelete: () => void;
 }) {
   const { coeff, probability, index, onUpdateCoefficient } = props;
 
-  const entries = Object.entries(coeff);
+  const entries = Object.entries(props.coeff);
 
   const coeffs = entries.map((e) => (
     <SingleCoefficent
@@ -57,32 +65,65 @@ function Coefficient(props: {
 
   return (
     <div className="coefficientSet">
-      <h2>Index: {index}</h2>
-      <div>Probability: {probability}</div>
-      {coeffs}
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <div className="equationHeader">
+            <h2>Index: {index}</h2>
+            <IconButton onClick={props.onClickDelete} className="deleteIcon">
+              <DeleteOutlinedIcon />
+            </IconButton>
+          </div>
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className="equationContent">
+            <div>Probability: {probability.toFixed(2)}</div>
+            {coeffs}
+          </div>
+        </AccordionDetails>
+      </Accordion>
     </div>
   );
 }
 
 export default function Equation(props: Props) {
-  const {
-    equation: { probabilities },
-    onUpdateEquation,
-  } = props;
+  const { equation, onUpdateEquation } = props;
 
-  const coefficientSet = props.equation.coefficients.map((co, idx) => {
-    const onUpdateCoefficient = (coeff: IFSCoefficent) => {
-      let newCoeffs = props.equation.coefficients;
-      newCoeffs[idx] = coeff;
-      onUpdateEquation({ ...props.equation, coefficients: newCoeffs });
+  const coefficientSet = equation.parts.map((part, idx) => {
+    const onUpdateCoefficient = (newCoeffs: IFSCoefficients) => {
+      let newParts = props.equation.parts;
+      newParts[idx] = {
+        probability: props.equation.parts[idx].probability,
+        coefficients: newCoeffs,
+        color: props.equation.parts[idx].color,
+      };
+      onUpdateEquation({ ...props.equation, parts: newParts });
     };
+
+    const onClickDelete = (index: number) => () => {
+      const oldProb = props.equation.parts[index].probability;
+
+      const copiedParts = props.equation.parts.slice(0);
+      copiedParts.splice(index, 1);
+      copiedParts[0].probability += oldProb;
+
+      onUpdateEquation({
+        ...props.equation,
+        parts: copiedParts,
+      });
+    };
+
     return (
       <Coefficient
         key={idx}
         index={idx}
-        probability={probabilities[idx]}
-        coeff={co}
+        probability={props.equation.parts[idx].probability}
+        coeff={part.coefficients}
         onUpdateCoefficient={onUpdateCoefficient}
+        onClickDelete={onClickDelete(idx)}
       />
     );
   });

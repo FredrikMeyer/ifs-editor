@@ -1,15 +1,18 @@
 {
     "compilerOptions": {
+        "target": "es5",
+        "module": "esnext",
         "outDir": "./dist/",
         "sourceMap": true,
         "strict": true,
         "noImplicitReturns": true,
         "noImplicitAny": true,
-        "module": "es6",
         "moduleResolution": "node",
-        "target": "es5",
         "allowJs": true,
         "jsx": "react",
+        "lib": [
+            "es2019", "dom"
+        ]
     },
     "include": [
         "./src/**/*"
