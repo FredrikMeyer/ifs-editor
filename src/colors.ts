@@ -18,8 +18,14 @@ export const BLUE: Color = {
 
 export const GREEN: Color = {
   red: 0,
-  green: 255,
+  green: 100,
   blue: 0,
+};
+
+export const BROWN: Color = {
+  red: 150,
+  green: 100,
+  blue: 40,
 };
 
 export function randomColor(): Color {

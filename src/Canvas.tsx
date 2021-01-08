@@ -1,4 +1,5 @@
 import * as React from "react";
+import { MouseEvent } from "react";
 import { useRef, useEffect } from "react";
 import { mapInterval, Point, probToIndex } from "./util";
 import { IFSEquation, View } from "./ifs";
@@ -37,13 +38,22 @@ class Drawer {
       ),
       ~~(
         mapInterval(
-          [this.view.yMax, this.view.yMin],
+          [this.view.yMin, this.view.yMax],
           [canvasOptions.height, 0],
           y
         ) + 0.5
       ),
     ];
   }
+}
+
+function getCursorPosition(
+  canvas: HTMLCanvasElement,
+  event: MouseEvent<HTMLCanvasElement>
+) {
+  const rect = canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
 }
 
 class IFSIterator {
@@ -111,15 +121,15 @@ function draw(
   }
   canvasData.data.set(buf8);
   ctx.putImageData(canvasData, 0, 0);
-  /*
-   *   ctx.beginPath();
-   *   ctx.strokeStyle = "black";
-   *   ctx.moveTo(0.5 * canvas.width, 0);
-   *   ctx.lineTo(0.5 * canvas.width, canvas.height);
-   *   ctx.moveTo(0, 0.5 * canvas.height);
-   *   ctx.lineTo(canvas.width, 0.5 * canvas.height);
-   *   console.log(ctx.strokeStyle);
-   *   ctx.stroke(); */
+
+  ctx.beginPath();
+  ctx.strokeStyle = "black";
+  ctx.moveTo(0.5 * canvas.width, 0);
+  ctx.lineTo(0.5 * canvas.width, canvas.height);
+  ctx.moveTo(0, 0.5 * canvas.height);
+  ctx.lineTo(canvas.width, 0.5 * canvas.height);
+  console.log(ctx.strokeStyle);
+  ctx.stroke();
 }
 
 interface CanvasProps {
@@ -139,5 +149,11 @@ export default function Canvas(props: CanvasProps) {
     }
   }, [props]);
 
-  return <canvas className="canvas" ref={canvasRef}></canvas>;
+  return (
+    <canvas
+      className="canvas"
+      onClick={(event) => getCursorPosition(canvasRef.current, event)}
+      ref={canvasRef}
+    ></canvas>
+  );
 }

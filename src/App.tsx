@@ -1,7 +1,14 @@
 import * as React from "react";
 import Canvas from "./Canvas";
 import Equation from "./Equations";
-import { eq1, eq2, randomEquation, randomIFSPart } from "./ifs";
+import {
+  eq1,
+  spirals,
+  randomEquation,
+  randomIFSPart,
+  barnsley,
+  chaos,
+} from "./ifs";
 import { Typography, Slider } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
@@ -13,15 +20,15 @@ import { randomColor } from "./colors";
 import ProbabilitiesSlider from "./ProbabilitiesSlider";
 
 function App() {
-  const [equation, updateEquation] = React.useState(eq1);
-  const [iterations, setIterations] = React.useState(50000);
+  const [currentEquation, updateEquation] = React.useState(eq1);
+  const [iterations, setIterations] = React.useState(100000);
 
   const onIterationsSliderChange = (_: any, val: number | number[]) => {
     setIterations(val as number);
   };
 
   const [equationIndex, setEquationIndex] = React.useState(0);
-  const equations = [eq1, eq2];
+  const equations = [eq1, spirals, barnsley, chaos];
   const handleSelectEquation = (
     event: React.ChangeEvent<{ name?: string; value: unknown }>
   ) => {
@@ -33,19 +40,19 @@ function App() {
 
   const onClickAdd = () => {
     const color = randomColor();
-    const oldParts = equation.parts;
-    const oldProb = oldParts[equation.parts.length - 1].probability;
+    const oldParts = currentEquation.parts;
+    const oldProb = oldParts[currentEquation.parts.length - 1].probability;
     const newProb = oldProb * 0.5;
     const newPart = randomIFSPart(color, newProb);
     oldParts[oldParts.length - 1].probability = newProb;
     updateEquation({
-      ...equation,
-      parts: [...equation.parts, newPart],
+      ...currentEquation,
+      parts: [...currentEquation.parts, newPart],
     });
   };
 
   const onUpdateProbs = (newProbs: number[]) => {
-    let newEquation = equation;
+    let newEquation = currentEquation;
     newProbs.forEach((p, idx) => {
       newEquation.parts[idx].probability = p;
     });
@@ -67,7 +74,7 @@ function App() {
           onChange={onIterationsSliderChange}
           aria-labelledby="iterations-slider"
           min={50000}
-          max={100000}
+          max={1000000}
           step={10000}
         />
         Iterations: {iterations}
@@ -90,6 +97,8 @@ function App() {
               >
                 <MenuItem value={0}>Mandelbrot-like</MenuItem>
                 <MenuItem value={1}>Spiral</MenuItem>
+                <MenuItem value={2}>Barnsley fern</MenuItem>
+                <MenuItem value={3}>Chaos</MenuItem>
               </Select>
             </div>
             <div>
@@ -99,13 +108,16 @@ function App() {
             </div>
           </div>
           <ProbabilitiesSlider
-            parts={equation.parts}
+            parts={currentEquation.parts}
             onUpdateProbs={onUpdateProbs}
           />
-          <Equation equation={equation} onUpdateEquation={updateEquation} />
+          <Equation
+            equation={currentEquation}
+            onUpdateEquation={updateEquation}
+          />
         </div>
         <div className="canvasContainer">
-          <Canvas iterations={iterations} equation={equation}></Canvas>
+          <Canvas iterations={iterations} equation={currentEquation}></Canvas>
         </div>
       </div>
       <div>
