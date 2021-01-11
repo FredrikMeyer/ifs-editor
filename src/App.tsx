@@ -18,6 +18,9 @@ import ControlPointIcon from "@material-ui/icons/ControlPoint";
 import IconButton from "@material-ui/core/IconButton";
 import { randomColor } from "./colors";
 import ProbabilitiesSlider from "./ProbabilitiesSlider";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+
+import Checkbox from "@material-ui/core/Checkbox";
 
 function App() {
   const [currentEquation, updateEquation] = React.useState(eq1);
@@ -61,6 +64,38 @@ function App() {
       ...newEquation,
     });
   };
+
+  const onCanvasClick = (pos: [number, number]) => {
+    const { view } = currentEquation;
+    const oldCenterX = 0.5 * (view.xMax + view.xMin);
+    const [x, y] = pos;
+    const diffx = x - oldCenterX;
+    const newxMax = view.xMax + diffx;
+    const newxMin = view.xMin + diffx;
+
+    const oldCenterY = 0.5 * (view.yMax + view.yMin);
+    const diffy = y - oldCenterY;
+    const newyMax = view.yMax + diffy;
+    const newyMin = view.yMin + diffy;
+
+    const k = 0.9;
+    const newxMaxScaled = k * newxMax - x * k + x;
+    const newxMinScaled = k * newxMin - x * k + x;
+    const newyMaxScaled = k * newyMax - y * k + y;
+    const newyMinScaled = k * newyMin - y * k + y;
+
+    updateEquation({
+      ...currentEquation,
+      view: {
+        xMax: newxMaxScaled,
+        xMin: newxMinScaled,
+        yMin: newyMinScaled,
+        yMax: newyMaxScaled,
+      },
+    });
+  };
+
+  const [showAxes, setShowAxes] = React.useState(true);
 
   return (
     <>
@@ -115,9 +150,24 @@ function App() {
             equation={currentEquation}
             onUpdateEquation={updateEquation}
           />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={showAxes}
+                onChange={(event) => setShowAxes(event.target.checked)}
+                name="checkedA"
+              />
+            }
+            label="Show axes"
+          />
         </div>
         <div className="canvasContainer">
-          <Canvas iterations={iterations} equation={currentEquation}></Canvas>
+          <Canvas
+            iterations={iterations}
+            equation={currentEquation}
+            onCanvasClick={onCanvasClick}
+            showAxes={showAxes}
+          ></Canvas>
         </div>
       </div>
       <div>
