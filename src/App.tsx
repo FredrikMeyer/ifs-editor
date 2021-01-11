@@ -19,6 +19,8 @@ import IconButton from "@material-ui/core/IconButton";
 import { randomColor } from "./colors";
 import ProbabilitiesSlider from "./ProbabilitiesSlider";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import PrettyPrinter from "./PrettyPrinter";
+import Grid from "@material-ui/core/Grid";
 
 import Checkbox from "@material-ui/core/Checkbox";
 
@@ -100,85 +102,89 @@ function App() {
   return (
     <>
       <h1>Iterated Function System</h1>
-      <div className="iterationsSlider">
-        <Typography id="iterations-slider" gutterBottom>
-          Number of iterations
-        </Typography>
-        <Slider
-          value={iterations}
-          onChange={onIterationsSliderChange}
-          aria-labelledby="iterations-slider"
-          min={50000}
-          max={1000000}
-          step={10000}
-        />
-        Iterations: {iterations}
-      </div>
-      <div className="settingsAndCanvas">
-        <div className="settings">
-          <div className="selectAndAdd">
-            <div>
-              <InputLabel
-                shrink
-                id="demo-simple-select-placeholder-label-label"
-              >
-                Choose a predefined equation
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-placeholder-label-label"
-                id="demo-simple-select-placeholder-label"
-                value={equationIndex}
-                onChange={handleSelectEquation}
-              >
-                <MenuItem value={0}>Mandelbrot-like</MenuItem>
-                <MenuItem value={1}>Spiral</MenuItem>
-                <MenuItem value={2}>Barnsley fern</MenuItem>
-                <MenuItem value={3}>Chaos</MenuItem>
-              </Select>
-            </div>
-            <div>
-              <IconButton onClick={onClickAdd}>
-                <ControlPointIcon className="addIcon" />
-              </IconButton>
-            </div>
+      <Grid container>
+        <Grid item>
+          <div className="canvasContainer">
+            <Canvas
+              iterations={iterations}
+              equation={currentEquation}
+              onCanvasClick={onCanvasClick}
+              showAxes={showAxes}
+            ></Canvas>
           </div>
-          <ProbabilitiesSlider
-            parts={currentEquation.parts}
-            onUpdateProbs={onUpdateProbs}
-          />
-          <Equation
-            equation={currentEquation}
-            onUpdateEquation={updateEquation}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={showAxes}
-                onChange={(event) => setShowAxes(event.target.checked)}
-                name="checkedA"
-              />
-            }
-            label="Show axes"
-          />
-        </div>
-        <div className="canvasContainer">
-          <Canvas
-            iterations={iterations}
-            equation={currentEquation}
-            onCanvasClick={onCanvasClick}
-            showAxes={showAxes}
-          ></Canvas>
-        </div>
-      </div>
-      <div>
-        <Button onClick={generateRandom} variant="contained">
-          Generate random equation
-        </Button>
-      </div>
-      <div className="inspired-by">
-        Inspired by <a href="http://paulbourke.net/fractals/ifs/">this</a> post
-        by Paul Bourke.
-      </div>
+        </Grid>
+        <Grid item>
+          <div className="iterationsSlider">
+            <Typography id="iterations-slider" gutterBottom>
+              Number of iterations
+            </Typography>
+            <Slider
+              value={iterations}
+              onChange={onIterationsSliderChange}
+              aria-labelledby="iterations-slider"
+              min={50000}
+              max={1000000}
+              step={10000}
+            />
+            Iterations: {iterations}
+          </div>
+          <div className="settings">
+            <div className="selectAndAdd">
+              <div>
+                <InputLabel shrink id="predef-label">
+                  Choose a predefined equation
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-placeholder-label-label"
+                  id="predef-label"
+                  className="equation-selector"
+                  value={equationIndex}
+                  onChange={handleSelectEquation}
+                >
+                  <MenuItem value={0}>Mandelbrot-like</MenuItem>
+                  <MenuItem value={1}>Spiral</MenuItem>
+                  <MenuItem value={2}>Barnsley fern</MenuItem>
+                  <MenuItem value={3}>Chaos</MenuItem>
+                </Select>
+              </div>
+              <div>
+                <IconButton onClick={onClickAdd}>
+                  <ControlPointIcon className="addIcon" />
+                </IconButton>
+              </div>
+            </div>
+            <Equation
+              equation={currentEquation}
+              onUpdateEquation={updateEquation}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={showAxes}
+                  onChange={(event) => setShowAxes(event.target.checked)}
+                  name="checkedA"
+                />
+              }
+              label="Show axes"
+            />
+            <ProbabilitiesSlider
+              parts={currentEquation.parts}
+              onUpdateProbs={onUpdateProbs}
+            />
+
+            <Button onClick={generateRandom} variant="contained">
+              Generate random equation
+            </Button>
+          </div>
+        </Grid>
+        <Grid item>
+          <PrettyPrinter equation={currentEquation} />
+          <div className="inspired-by">
+            Inspired by <a href="http://paulbourke.net/fractals/ifs/">this</a>{" "}
+            post by Paul Bourke.
+          </div>
+        </Grid>
+      </Grid>
     </>
   );
 }

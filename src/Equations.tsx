@@ -3,10 +3,11 @@ import { IFSEquation, IFSCoefficients } from "./ifs";
 import { Slider, Typography } from "@material-ui/core";
 import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
 import IconButton from "@material-ui/core/IconButton";
-
+import Grid from "@material-ui/core/Grid";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
+import Input from "@material-ui/core/Input";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 interface Props {
@@ -25,18 +26,40 @@ function SingleCoefficent(props: {
   ) => {
     props.onUpdateCoeff(newValue as number);
   };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    props.onUpdateCoeff(Number(event.target.value));
+  };
+
   const id = `${props.name}-slider`;
   return (
     <div className="singleCoefficent">
-      <Typography id={id}>{props.name}</Typography>
-      <Slider
-        aria-labelledby={id}
-        value={props.value}
-        onChange={handleSliderChange}
-        min={-1}
-        max={1}
-        step={0.01}
-      />
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs>
+          <Typography id={id}>{props.name}</Typography>
+          <Slider
+            aria-labelledby={id}
+            value={props.value}
+            onChange={handleSliderChange}
+            min={-1}
+            max={1}
+            step={0.01}
+          />
+        </Grid>
+        <Grid item>
+          <Input
+            style={{ width: "100px" }}
+            value={props.value}
+            onChange={handleInputChange}
+            inputProps={{
+              step: 0.01,
+              min: 0,
+              max: 1,
+              type: "number",
+            }}
+          />
+        </Grid>
+      </Grid>
     </div>
   );
 }
