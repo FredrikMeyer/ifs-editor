@@ -12,7 +12,7 @@
     "author": "Fredrik Meyer",
     "license": "ISC",
     "devDependencies": {
-        "@babel/core": "^7.12.10",
+        "@babel/core": "^7.19.1",
         "@babel/preset-env": "^7.12.11",
         "@babel/preset-react": "^7.12.10",
         "@types/react": "^17.0.0",
