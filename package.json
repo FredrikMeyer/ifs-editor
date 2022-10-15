@@ -5,13 +5,15 @@
     "scripts": {
         "dev": "parcel src/index.html",
         "build": "parcel build src/index.html --dist-dir docs --public-url ./",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "typecheck": "tsc --noEmit"
     },
     "browserslist": "> 0.5%, last 2 versions, not dead",
     "keywords": [],
     "author": "Fredrik Meyer",
     "license": "ISC",
     "devDependencies": {
+        "@types/katex": "^0.14.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
         "parcel": "^2.0.0",

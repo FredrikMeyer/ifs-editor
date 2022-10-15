@@ -1,15 +1,15 @@
 import * as React from "react";
-import { Typography, Slider } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import ControlPointIcon from "@material-ui/icons/ControlPoint";
-import IconButton from "@material-ui/core/IconButton";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+import { Typography, Slider } from "@mui/material";
+import Button from "@mui/material/Button";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import ControlPointIcon from "@mui/icons-material/ControlPoint";
+import IconButton from "@mui/material/IconButton";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 import ProbabilitiesSlider from "./ProbabilitiesSlider";
-import Grid from "@material-ui/core/Grid";
+import Grid from "@mui/material/Grid";
 import { randomColor } from "./colors";
 import Canvas from "./Canvas";
 import Equation from "./Equations";
@@ -33,9 +33,7 @@ function App() {
 
   const [equationIndex, setEquationIndex] = React.useState(0);
   const equations = [eq1, spirals, barnsley, chaos];
-  const handleSelectEquation = (
-    event: React.ChangeEvent<{ name?: string; value: unknown }>
-  ) => {
+  const handleSelectEquation = (event: SelectChangeEvent<number>) => {
     updateEquation(equations[event.target.value as number]);
     setEquationIndex(event.target.value as number);
   };
@@ -134,8 +132,6 @@ function App() {
                   Choose a predefined equation
                 </InputLabel>
                 <Select
-                  labelId="demo-simple-select-placeholder-label-label"
-                  id="predef-label"
                   className="equation-selector"
                   value={equationIndex}
                   onChange={handleSelectEquation}
@@ -147,7 +143,7 @@ function App() {
                 </Select>
               </div>
               <div>
-                <IconButton onClick={onClickAdd}>
+                <IconButton onClick={onClickAdd} size="large">
                   <ControlPointIcon className="addIcon" />
                 </IconButton>
               </div>

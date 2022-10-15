@@ -1,9 +1,8 @@
 import * as React from "react";
-import Latex from "react-latex";
 import { IFSEquation, IFSPart } from "./ifs";
 import katex from "katex";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 interface Props {
   equation: IFSEquation;
@@ -15,11 +14,11 @@ function partToLatexString(part: IFSPart) {
 }
 
 function PrettyPart(props: { index: number; part: IFSPart }) {
-  const ref = React.useRef(null);
+  const ref = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => {
     const div = ref.current;
     const s = `f_${props.index}(x)=` + partToLatexString(props.part);
-    katex.render(s, div);
+    katex.render(s, div as HTMLDivElement);
   });
   return <div ref={ref}></div>;
 }

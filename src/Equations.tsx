@@ -1,14 +1,14 @@
 import * as React from "react";
 import { IFSEquation, IFSCoefficients } from "./ifs";
-import { Slider, Typography } from "@material-ui/core";
-import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
-import IconButton from "@material-ui/core/IconButton";
-import Grid from "@material-ui/core/Grid";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import Input from "@material-ui/core/Input";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { Slider, Typography } from "@mui/material";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import IconButton from "@mui/material/IconButton";
+import Grid from "@mui/material/Grid";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Input from "@mui/material/Input";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 interface Props {
   equation: IFSEquation;
@@ -20,10 +20,7 @@ function SingleCoefficent(props: {
   value: number;
   onUpdateCoeff: (newValue: number) => void;
 }) {
-  const handleSliderChange = (
-    _: React.ChangeEvent<{}>,
-    newValue: number | number[]
-  ) => {
+  const handleSliderChange = (_: Event, newValue: number | number[]) => {
     props.onUpdateCoeff(newValue as number);
   };
 
@@ -96,7 +93,11 @@ function Coefficient(props: {
         >
           <div className="equationHeader">
             <h2>Index: {index}</h2>
-            <IconButton onClick={props.onClickDelete} className="deleteIcon">
+            <IconButton
+              onClick={props.onClickDelete}
+              className="deleteIcon"
+              size="large"
+            >
               <DeleteOutlinedIcon />
             </IconButton>
           </div>
