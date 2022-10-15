@@ -15,6 +15,22 @@ const canvasOptions: CanvasOptions = {
   height: 800,
 };
 
+function toWorldCoords(
+  options: CanvasOptions,
+  equation: IFSEquation,
+  point: Point
+): [number, number] {
+  const { x, y } = point;
+  const { width, height } = options;
+  const {
+    view: { xMin, xMax, yMax, yMin },
+  } = equation;
+  return [
+    mapInterval([0, width], [xMin, xMax], x),
+    mapInterval([height, 0], [yMin, yMax], y),
+  ];
+}
+
 class Drawer {
   private canvasOptions: CanvasOptions;
   private equation: IFSEquation;
@@ -49,20 +65,6 @@ class Drawer {
           y
         ) + 0.5
       ),
-    ];
-  }
-
-  public toWorldCoords(point: Point): [number, number] {
-    const { x, y } = point;
-    const {
-      canvasOptions: { width, height },
-    } = this;
-    const {
-      view: { xMin, xMax, yMax, yMin },
-    } = this.equation;
-    return [
-      mapInterval([0, width], [xMin, xMax], x),
-      mapInterval([height, 0], [yMin, yMax], y),
     ];
   }
 
@@ -118,7 +120,7 @@ class Drawer {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    return this.toWorldCoords({ x, y });
+    return toWorldCoords(this.canvasOptions, this.equation, { x, y });
   }
 }
 
