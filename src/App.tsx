@@ -1,6 +1,19 @@
 import * as React from "react";
+import { Typography, Slider } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import ControlPointIcon from "@material-ui/icons/ControlPoint";
+import IconButton from "@material-ui/core/IconButton";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import ProbabilitiesSlider from "./ProbabilitiesSlider";
+import Grid from "@material-ui/core/Grid";
+import { randomColor } from "./colors";
 import Canvas from "./Canvas";
 import Equation from "./Equations";
+import PrettyPrinter from "./PrettyPrinter";
 import {
   eq1,
   spirals,
@@ -9,20 +22,6 @@ import {
   barnsley,
   chaos,
 } from "./ifs";
-import { Typography, Slider } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import ControlPointIcon from "@material-ui/icons/ControlPoint";
-import IconButton from "@material-ui/core/IconButton";
-import { randomColor } from "./colors";
-import ProbabilitiesSlider from "./ProbabilitiesSlider";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import PrettyPrinter from "./PrettyPrinter";
-import Grid from "@material-ui/core/Grid";
-
-import Checkbox from "@material-ui/core/Checkbox";
 
 function App() {
   const [currentEquation, updateEquation] = React.useState(eq1);

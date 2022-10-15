@@ -54,11 +54,15 @@ class Drawer {
 
   public toWorldCoords(point: Point): [number, number] {
     const { x, y } = point;
-    const { canvasOptions } = this;
-    const { view } = this.equation;
+    const {
+      canvasOptions: { width, height },
+    } = this;
+    const {
+      view: { xMin, xMax, yMax, yMin },
+    } = this.equation;
     return [
-      mapInterval([0, canvasOptions.width], [view.xMin, view.xMax], x),
-      mapInterval([canvasOptions.height, 0], [view.yMin, view.yMax], y),
+      mapInterval([0, width], [xMin, xMax], x),
+      mapInterval([height, 0], [yMin, yMax], y),
     ];
   }
 
