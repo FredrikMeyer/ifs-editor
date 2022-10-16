@@ -98,7 +98,7 @@ function App() {
 
   return (
     <>
-      <h1>Iterated Function System</h1>
+      <Typography variant="h1">Iterated Function System</Typography>
       <Grid container>
         <Grid item>
           <div className="canvasContainer">
