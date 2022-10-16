@@ -14,28 +14,21 @@ import { randomColor } from "./colors";
 import Canvas from "./Canvas";
 import Equation from "./Equations";
 import PrettyPrinter from "./PrettyPrinter";
-import {
-  eq1,
-  spirals,
-  randomEquation,
-  randomIFSPart,
-  barnsley,
-  chaos,
-} from "./ifs";
+import { randomEquation, randomIFSPart } from "./ifs";
+import { examples, exampleNames, Examples } from "./ifsExamples";
 
 function App() {
-  const [currentEquation, updateEquation] = React.useState(eq1);
+  const [currentEquation, updateEquation] = React.useState(examples.eq1);
   const [iterations, setIterations] = React.useState(100000);
 
   const onIterationsSliderChange = (_: Event, val: number | number[]) => {
     setIterations(val as number);
   };
 
-  const [equationIndex, setEquationIndex] = React.useState(0);
-  const equations = [eq1, spirals, barnsley, chaos];
-  const handleSelectEquation = (event: SelectChangeEvent<number>) => {
-    updateEquation(equations[event.target.value as number]);
-    setEquationIndex(event.target.value as number);
+  const [equation, setEquation] = React.useState<Examples>(exampleNames[0]);
+  const handleSelectEquation = (event: SelectChangeEvent<Examples>) => {
+    updateEquation(examples[event.target.value as Examples]);
+    setEquation(event.target.value as Examples);
   };
 
   const generateRandom = () => updateEquation(randomEquation());
@@ -133,13 +126,13 @@ function App() {
                 </InputLabel>
                 <Select
                   className="equation-selector"
-                  value={equationIndex}
+                  value={equation}
                   onChange={handleSelectEquation}
                 >
-                  <MenuItem value={0}>Mandelbrot-like</MenuItem>
-                  <MenuItem value={1}>Spiral</MenuItem>
-                  <MenuItem value={2}>Barnsley fern</MenuItem>
-                  <MenuItem value={3}>Chaos</MenuItem>
+                  <MenuItem value={"eq1"}>Mandelbrot-like</MenuItem>
+                  <MenuItem value={"spirals"}>Spiral</MenuItem>
+                  <MenuItem value={"barnsley"}>Barnsley fern</MenuItem>
+                  <MenuItem value={"chaos"}>Chaos</MenuItem>
                 </Select>
               </div>
               <div>
