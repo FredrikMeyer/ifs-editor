@@ -1,9 +1,13 @@
+import { Color } from "./colors";
+
 export type Interval = [number, number];
 
 export type Point = {
   x: number;
   y: number;
 };
+
+export type ColoredPoint = Point & { color: Color };
 
 export function probToIndex(probs: number[], prob: number) {
   let c = 0;

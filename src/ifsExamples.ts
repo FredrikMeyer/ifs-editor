@@ -8,7 +8,7 @@ export type Examples = typeof exampleNames[number];
 
 export const examples: Record<Examples, IFSEquation> = {
   eq1: {
-    view: {
+    defaultView: {
       xMin: -1,
       xMax: 1,
       yMin: -1,
@@ -42,7 +42,7 @@ export const examples: Record<Examples, IFSEquation> = {
     ],
   },
   spirals: {
-    view: {
+    defaultView: {
       xMin: -2,
       xMax: 2,
       yMin: 0,
@@ -88,7 +88,7 @@ export const examples: Record<Examples, IFSEquation> = {
     ],
   },
   barnsley: {
-    view: {
+    defaultView: {
       xMin: -2,
       xMax: 2,
       yMin: 0,
@@ -146,7 +146,7 @@ export const examples: Record<Examples, IFSEquation> = {
     ],
   },
   chaos: {
-    view: {
+    defaultView: {
       xMin: -2,
       xMax: 2,
       yMin: 1.53,

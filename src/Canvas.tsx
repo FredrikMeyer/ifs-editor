@@ -1,30 +1,27 @@
 import * as React from "react";
 import { MouseEvent } from "react";
-import { useRef, useEffect } from "react";
-import { mapInterval, Point, probToIndex } from "./util";
-import { IFSEquation } from "./ifs";
-import { Color } from "./colors";
+import { useRef } from "react";
+import { ColoredPoint, mapInterval, Point } from "./util";
+import { IFSEquation, IFSIterator, View } from "./ifs";
 
-interface CanvasOptions {
+interface DrawerOptions {
   width: number;
   height: number;
 }
 
-const canvasOptions: CanvasOptions = {
+const drawerOptions: DrawerOptions = {
   width: 800,
   height: 800,
 };
 
 function toWorldCoords(
-  options: CanvasOptions,
-  equation: IFSEquation,
+  options: DrawerOptions,
+  view: View,
   point: Point
 ): [number, number] {
   const { x, y } = point;
   const { width, height } = options;
-  const {
-    view: { xMin, xMax, yMax, yMin },
-  } = equation;
+  const { xMin, xMax, yMax, yMin } = view;
   return [
     mapInterval([0, width], [xMin, xMax], x),
     mapInterval([height, 0], [yMin, yMax], y),
@@ -32,18 +29,13 @@ function toWorldCoords(
 }
 
 class Drawer {
-  private canvasOptions: CanvasOptions;
-  private equation: IFSEquation;
-  private showAxes: boolean;
+  private canvasOptions: DrawerOptions;
+  private view: View;
 
-  constructor(
-    options: CanvasOptions,
-    equation: IFSEquation,
-    showAxes: boolean
-  ) {
+  constructor(options: DrawerOptions, view: View) {
+    console.log("i was created");
     this.canvasOptions = options;
-    this.equation = equation;
-    this.showAxes = showAxes;
+    this.view = view;
   }
 
   public toCanvasCoords(point: Point): [number, number] {
@@ -53,14 +45,14 @@ class Drawer {
     return [
       ~~(
         mapInterval(
-          [this.equation.view.xMin, this.equation.view.xMax],
+          [this.view.xMin, this.view.xMax],
           [0, canvasOptions.width],
           x
         ) + 0.5
       ),
       ~~(
         mapInterval(
-          [this.equation.view.yMin, this.equation.view.yMax],
+          [this.view.yMin, this.view.yMax],
           [canvasOptions.height, 0],
           y
         ) + 0.5
@@ -68,12 +60,17 @@ class Drawer {
     ];
   }
 
-  public draw(canvas: HTMLCanvasElement, iterations: number) {
+  public draw(
+    canvas: HTMLCanvasElement,
+    coloredPoints: ColoredPoint[],
+    mousePos: [number, number],
+    showAxes: boolean
+  ) {
     // todo: bruk window.devicePixelRatio
     /* canvas.width = 2 * WIDTH; */
     /* canvas.height = 2 * HEIGHT; */
-    const WIDTH = canvasOptions.width;
-    const HEIGHT = canvasOptions.height;
+    const WIDTH = drawerOptions.width;
+    const HEIGHT = drawerOptions.height;
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
     canvas.style.width = `${WIDTH}px`;
@@ -86,16 +83,15 @@ class Drawer {
     const buf8 = new Uint8ClampedArray(buf);
     const data = new Uint32Array(buf);
 
-    const iterator = new IFSIterator(this.equation);
-    for (let i = 0; i < iterations; i++) {
-      const pt = iterator.current;
-      const color = iterator.currentColor;
-      iterator.iterate();
+    for (let i = 0; i < coloredPoints.length; i++) {
+      const pt = coloredPoints[i];
+      const { color } = coloredPoints[i];
       const [x, y] = this.toCanvasCoords(pt);
 
       if (i < 20) {
         continue;
       }
+
       // See https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
       // Might give wrong result if run on a big endian processor
       data[y * canvasData.width + x] =
@@ -104,7 +100,7 @@ class Drawer {
     canvasData.data.set(buf8);
     ctx.putImageData(canvasData, 0, 0);
 
-    if (this.showAxes) {
+    if (showAxes) {
       ctx.beginPath();
       ctx.strokeStyle = "black";
       ctx.moveTo(0.5 * canvas.width, 0);
@@ -112,6 +108,17 @@ class Drawer {
       ctx.moveTo(0, 0.5 * canvas.height);
       ctx.lineTo(canvas.width, 0.5 * canvas.height);
       ctx.stroke();
+
+      ctx.font = "16px serif";
+      const { xMax, xMin, yMin, yMax } = this.view;
+      ctx.fillText(`x: [${xMin.toFixed(2)}, ${xMax.toFixed(2)}]`, 10, 40);
+      ctx.fillText(`y: [${yMin.toFixed(2)}, ${yMax.toFixed(2)}]`, 10, 60);
+
+      ctx.fillText(
+        `[x,y]: [${mousePos[0].toFixed(2)}, ${mousePos[1].toFixed(2)}]`,
+        10,
+        80
+      );
     }
   }
 
@@ -123,79 +130,88 @@ class Drawer {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    return toWorldCoords(this.canvasOptions, this.equation, { x, y });
-  }
-}
-
-class IFSIterator {
-  private equation: IFSEquation;
-  private probabilites: number[];
-  public current: Point;
-  public currentColor: Color;
-
-  constructor(equation: IFSEquation) {
-    this.equation = equation;
-    this.probabilites = equation.parts.map((p) => p.probability);
-    this.current = { x: Math.random(), y: Math.random() };
-    this.currentColor = { red: 255, blue: 0, green: 0 };
-  }
-
-  public iterate() {
-    const { x, y } = this.current;
-
-    const r = Math.random();
-    const idx = probToIndex(this.probabilites, r);
-
-    const { a, b, c, d, e, f } = this.equation.parts[idx].coefficients;
-    const nx = a * x + b * y + e;
-    const ny = c * x + d * y + f;
-
-    this.current = { x: nx, y: ny };
-    this.currentColor = this.equation.parts[idx].color;
+    return toWorldCoords(this.canvasOptions, this.view, { x, y });
   }
 }
 
 interface CanvasProps {
   iterations: number;
   equation: IFSEquation;
-  onCanvasClick: (pos: [number, number]) => void;
+  startingView: View;
   showAxes: boolean;
 }
 
 export default function Canvas({
   iterations,
-  onCanvasClick,
   equation,
   showAxes,
+  startingView,
 }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const drawer = React.useMemo(
-    () => new Drawer(canvasOptions, equation, showAxes),
-    [equation, showAxes]
-  );
+  const [view, setView] = React.useState(startingView);
+  const drawer = React.useMemo(() => new Drawer(drawerOptions, view), [view]);
 
-  useEffect(() => {
+  const points = React.useMemo(() => {
+    const iterator = new IFSIterator(equation);
+    return iterator.getPoints(iterations);
+  }, [equation, iterations]);
+
+  const [mousePos, setMousePos] = React.useState<[number, number]>([0, 0]);
+
+  React.useEffect(() => {
     const canvas = canvasRef.current;
+    let requestId: number | null = null;
     if (canvas) {
-      window.requestAnimationFrame(() => drawer.draw(canvas, iterations));
+      requestId = window.requestAnimationFrame(() =>
+        drawer.draw(canvas, points, mousePos, showAxes)
+      );
     }
-  }, [iterations, drawer]);
 
-  const internallOnCanvasClick = (
-    event: React.MouseEvent<HTMLCanvasElement>
-  ) => {
+    return () => window.cancelAnimationFrame(requestId || 0);
+  }, [drawer, mousePos, points, showAxes]);
+
+  const onCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     const pos = drawer.getCursorPosition(
       canvasRef.current as HTMLCanvasElement,
       event
     );
-    onCanvasClick(pos);
+    const oldCenterX = 0.5 * (view.xMax + view.xMin);
+    const [x, y] = pos;
+    const diffx = x - oldCenterX;
+    const newxMax = view.xMax + diffx;
+    const newxMin = view.xMin + diffx;
+
+    const oldCenterY = 0.5 * (view.yMax + view.yMin);
+    const diffy = y - oldCenterY;
+    const newyMax = view.yMax + diffy;
+    const newyMin = view.yMin + diffy;
+
+    const k = 0.9;
+    const newxMaxScaled = k * newxMax - x * k + x;
+    const newxMinScaled = k * newxMin - x * k + x;
+    const newyMaxScaled = k * newyMax - y * k + y;
+    const newyMinScaled = k * newyMin - y * k + y;
+
+    setView({
+      xMax: newxMaxScaled,
+      xMin: newxMinScaled,
+      yMin: newyMinScaled,
+      yMax: newyMaxScaled,
+    });
   };
 
   return (
-    <canvas
-      className="canvas"
-      onClick={(event) => internallOnCanvasClick(event)}
-      ref={canvasRef}
-    ></canvas>
+    <div>
+      <canvas
+        className="canvas"
+        onClick={(event) => onCanvasClick(event)}
+        onMouseMove={(e) => {
+          if (canvasRef.current) {
+            setMousePos(drawer.getCursorPosition(canvasRef.current, e));
+          }
+        }}
+        ref={canvasRef}
+      ></canvas>
+    </div>
   );
 }

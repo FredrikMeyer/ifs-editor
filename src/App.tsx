@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Typography, Slider } from "@mui/material";
+import { Typography, Slider, Link } from "@mui/material";
 import Button from "@mui/material/Button";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
@@ -57,48 +57,27 @@ function App() {
     });
   };
 
-  const onCanvasClick = (pos: [number, number]) => {
-    const { view } = currentEquation;
-    const oldCenterX = 0.5 * (view.xMax + view.xMin);
-    const [x, y] = pos;
-    const diffx = x - oldCenterX;
-    const newxMax = view.xMax + diffx;
-    const newxMin = view.xMin + diffx;
-
-    const oldCenterY = 0.5 * (view.yMax + view.yMin);
-    const diffy = y - oldCenterY;
-    const newyMax = view.yMax + diffy;
-    const newyMin = view.yMin + diffy;
-
-    const k = 0.9;
-    const newxMaxScaled = k * newxMax - x * k + x;
-    const newxMinScaled = k * newxMin - x * k + x;
-    const newyMaxScaled = k * newyMax - y * k + y;
-    const newyMinScaled = k * newyMin - y * k + y;
-
-    updateEquation({
-      ...currentEquation,
-      view: {
-        xMax: newxMaxScaled,
-        xMin: newxMinScaled,
-        yMin: newyMinScaled,
-        yMax: newyMaxScaled,
-      },
-    });
-  };
-
   const [showAxes, setShowAxes] = React.useState(true);
 
   return (
     <>
       <Typography variant="h1">Iterated Function System</Typography>
+      <Typography variant="body1">
+        Iterated Function Systems are a type of fractals. See{" "}
+        <Link href="https://en.wikipedia.org/wiki/Iterated_function_system">
+          Wikipedia
+        </Link>{" "}
+        for references. This app was inspired by{" "}
+        <Link href="http://paulbourke.net/fractals/ifs/">this</Link> post by
+        Paul Bourke.
+      </Typography>
       <Grid container>
         <Grid item>
           <div className="canvasContainer">
             <Canvas
               iterations={iterations}
               equation={currentEquation}
-              onCanvasClick={onCanvasClick}
+              startingView={currentEquation.defaultView}
               showAxes={showAxes}
             ></Canvas>
           </div>
@@ -155,6 +134,7 @@ function App() {
               }
               label="Show axes"
             />
+
             <ProbabilitiesSlider
               parts={currentEquation.parts}
               onUpdateProbs={onUpdateProbs}
@@ -167,10 +147,6 @@ function App() {
         </Grid>
         <Grid item>
           <PrettyPrinter equation={currentEquation} />
-          <div className="inspired-by">
-            Inspired by <a href="http://paulbourke.net/fractals/ifs/">this</a>{" "}
-            post by Paul Bourke.
-          </div>
         </Grid>
       </Grid>
     </>

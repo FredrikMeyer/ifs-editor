@@ -1,4 +1,5 @@
 import { BLUE, Color, RED } from "./colors";
+import { ColoredPoint, probToIndex } from "./util";
 
 export interface IFSCoefficients {
   a: number;
@@ -23,7 +24,7 @@ export interface View {
 }
 
 export interface IFSEquation {
-  view: View;
+  defaultView: View;
   parts: IFSPart[];
 }
 
@@ -46,7 +47,7 @@ export function randomEquation(): IFSEquation {
   // TODO, once more than two sets of IFSCoefficents are implemented,
   // make random probabilities as well
   return {
-    view: {
+    defaultView: {
       xMin: -1,
       xMax: 1,
       yMin: -1,
@@ -54,4 +55,46 @@ export function randomEquation(): IFSEquation {
     },
     parts: [randomIFSPart(RED, 0.5), randomIFSPart(BLUE, 0.5)],
   };
+}
+
+export class IFSIterator {
+  private equation: IFSEquation;
+  private probabilites: number[];
+
+  constructor(equation: IFSEquation) {
+    this.equation = equation;
+    this.probabilites = equation.parts.map((p) => p.probability);
+  }
+
+  private iterate(prev: ColoredPoint): ColoredPoint {
+    const { x, y } = prev;
+
+    const r = Math.random();
+    const idx = probToIndex(this.probabilites, r);
+
+    const { a, b, c, d, e, f } = this.equation.parts[idx].coefficients;
+    const nx = a * x + b * y + e;
+    const ny = c * x + d * y + f;
+
+    return {
+      x: nx,
+      y: ny,
+      color: this.equation.parts[idx].color,
+    };
+  }
+
+  public getPoints(iterations: number): ColoredPoint[] {
+    const res: ColoredPoint[] = [
+      {
+        x: Math.random(),
+        y: Math.random(),
+        color: RED,
+      },
+    ];
+    for (let i = 0; i < iterations; i++) {
+      res.push(this.iterate(res[res.length - 1]));
+    }
+
+    return res;
+  }
 }
