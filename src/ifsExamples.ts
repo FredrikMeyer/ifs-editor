@@ -3,7 +3,13 @@ import { IFSEquation } from "./ifs";
 
 const chaosProb = 0.05263157895;
 
-export const exampleNames = ["eq1", "spirals", "chaos", "barnsley"] as const;
+export const exampleNames = [
+  "eq1",
+  "spirals",
+  "chaos",
+  "barnsley",
+  "blackSpleenwort",
+] as const;
 export type Examples = typeof exampleNames[number];
 
 export const examples: Record<Examples, IFSEquation> = {
@@ -379,6 +385,65 @@ export const examples: Record<Examples, IFSEquation> = {
           d: 0.053,
           e: 5.941,
           f: 1.487,
+        },
+      },
+    ],
+  },
+  blackSpleenwort: {
+    // From page 115 in Fractals Everywhere
+    defaultView: {
+      xMin: 0,
+      xMax: 1,
+      yMin: 0,
+      yMax: 1,
+    },
+    parts: [
+      {
+        probability: 0.1,
+        color: BROWN,
+        coefficients: {
+          a: 0,
+          b: 0,
+          c: 0,
+          d: 0.16,
+          e: 0,
+          f: 0,
+        },
+      },
+      {
+        probability: 0.3,
+        color: RED,
+        coefficients: {
+          a: 0.8491909883445791,
+          b: 0.0370764792605356,
+          c: -0.0370764792605356,
+          d: 0.8491909883445791,
+          e: 0,
+          f: 1.6,
+        },
+      },
+      {
+        probability: 0.3,
+        color: GREEN,
+        coefficients: {
+          a: 0.1968177086971522,
+          b: -0.25660125727574246,
+          c: 0.22641287406683155,
+          d: 0.2230600698567725,
+          e: 0,
+          f: 1.6,
+        },
+      },
+      {
+        probability: 0.3,
+        color: BLUE,
+        coefficients: {
+          a: -0.15,
+          b: 0.28343644395402184,
+          c: 0.2598076211353316,
+          d: 0.23783141558401957,
+          e: 0,
+          f: 0.44,
         },
       },
     ],

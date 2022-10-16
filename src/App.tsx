@@ -112,6 +112,9 @@ function App() {
                   <MenuItem value={"spirals"}>Spiral</MenuItem>
                   <MenuItem value={"barnsley"}>Barnsley fern</MenuItem>
                   <MenuItem value={"chaos"}>Chaos</MenuItem>
+                  <MenuItem value={"blackSpleenwort"}>
+                    Black Spleenwort fern
+                  </MenuItem>
                 </Select>
               </div>
               <div>
