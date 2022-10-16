@@ -15,8 +15,8 @@
     "license": "ISC",
     "devDependencies": {
         "@types/katex": "^0.14.0",
-        "@types/react": "^17.0.0",
-        "@types/react-dom": "^17.0.0",
+        "@types/react": "^18.0.0",
+        "@types/react-dom": "^18.0.0",
         "@typescript-eslint/eslint-plugin": "^5.40.0",
         "@typescript-eslint/parser": "^5.40.0",
         "eslint": "^8.25.0",
@@ -32,9 +32,8 @@
         "@emotion/styled": "^11.10.4",
         "@mui/icons-material": "^5.10.9",
         "@mui/material": "^5.10.9",
-        "@mui/styles": "^5.10.9",
         "katex": "^0.16.2",
-        "react": "^17.0.0",
-        "react-dom": "^17.0.0"
+        "react": "^18.0.0",
+        "react-dom": "^18.0.0"
     }
 }

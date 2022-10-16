@@ -1,5 +1,5 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import {
   ThemeProvider,
   StyledEngineProvider,
@@ -21,11 +21,15 @@ const theme = createTheme({
 });
 
 const mountNode = document.getElementById("app");
-ReactDOM.render(
-  <StyledEngineProvider injectFirst>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
-  </StyledEngineProvider>,
-  mountNode
-);
+
+if (mountNode) {
+  const root = createRoot(mountNode);
+
+  root.render(
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </StyledEngineProvider>
+  );
+}
