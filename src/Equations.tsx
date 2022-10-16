@@ -9,6 +9,8 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Input from "@mui/material/Input";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { HexColorPicker } from "react-colorful";
+import { Color, hexToColor, toHexString, RED } from "./colors";
 
 interface Props {
   equation: IFSEquation;
@@ -65,6 +67,8 @@ function Coefficient(props: {
   coeff: IFSCoefficients;
   index: number;
   probability: number;
+  color: Color;
+  setColor: (color: Color) => void;
   onUpdateCoefficient: (newVal: IFSCoefficients) => void;
   onClickDelete: () => void;
 }) {
@@ -107,6 +111,12 @@ function Coefficient(props: {
             <div>Probability: {probability.toFixed(2)}</div>
             {coeffs}
           </div>
+          <div>
+            <HexColorPicker
+              color={toHexString(props.color)}
+              onChange={(v) => props.setColor(hexToColor(v) || RED)}
+            />
+          </div>
         </AccordionDetails>
       </Accordion>
     </div>
@@ -140,10 +150,22 @@ export default function Equation(props: Props) {
       });
     };
 
+    const updateColor = (color: Color) => {
+      const newParts = props.equation.parts;
+      newParts[idx] = {
+        ...props.equation.parts[idx],
+        color: color,
+      };
+      console.log("called");
+      onUpdateEquation({ ...props.equation, parts: newParts });
+    };
+
     return (
       <Coefficient
         key={idx}
         index={idx}
+        color={props.equation.parts[idx].color}
+        setColor={updateColor}
         probability={props.equation.parts[idx].probability}
         coeff={part.coefficients}
         onUpdateCoefficient={onUpdateCoefficient}

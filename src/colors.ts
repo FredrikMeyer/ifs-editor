@@ -55,3 +55,15 @@ export function toHexString(color: Color): string {
 
   return "#" + r + g + b;
 }
+
+// https://stackoverflow.com/a/5624139/1013553
+export function hexToColor(s: string): Color | null {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(s);
+  return result
+    ? {
+        red: parseInt(result[1], 16),
+        green: parseInt(result[2], 16),
+        blue: parseInt(result[3], 16),
+      }
+    : null;
+}
