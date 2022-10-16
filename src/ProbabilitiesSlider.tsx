@@ -7,7 +7,7 @@ export default function ProbabilitiesSlider(props: {
   onUpdateProbs: (probs: number[]) => void;
 }) {
   const probs = props.parts.map((p) => p.probability);
-  const handleChange = (_: any, newValue: number | number[]) => {
+  const handleChange = (_: Event, newValue: number | number[]) => {
     props.onUpdateProbs(newValue as number[]);
   };
   return (

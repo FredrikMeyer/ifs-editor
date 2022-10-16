@@ -118,7 +118,7 @@ export default function Equation(props: Props) {
 
   const coefficientSet = equation.parts.map((part, idx) => {
     const onUpdateCoefficient = (newCoeffs: IFSCoefficients) => {
-      let newParts = props.equation.parts;
+      const newParts = props.equation.parts;
       newParts[idx] = {
         probability: props.equation.parts[idx].probability,
         coefficients: newCoeffs,

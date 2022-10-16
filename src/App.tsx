@@ -27,7 +27,7 @@ function App() {
   const [currentEquation, updateEquation] = React.useState(eq1);
   const [iterations, setIterations] = React.useState(100000);
 
-  const onIterationsSliderChange = (_: any, val: number | number[]) => {
+  const onIterationsSliderChange = (_: Event, val: number | number[]) => {
     setIterations(val as number);
   };
 
@@ -54,7 +54,7 @@ function App() {
   };
 
   const onUpdateProbs = (newProbs: number[]) => {
-    let newEquation = currentEquation;
+    const newEquation = currentEquation;
     newProbs.forEach((p, idx) => {
       newEquation.parts[idx].probability = p;
     });

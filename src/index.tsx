@@ -10,7 +10,7 @@ import App from "./App";
 
 const theme = createTheme();
 
-var mountNode = document.getElementById("app");
+const mountNode = document.getElementById("app");
 ReactDOM.render(
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme={theme}>

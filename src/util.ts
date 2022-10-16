@@ -21,7 +21,7 @@ export function mapInterval(
   toInterval: Interval,
   x: number
 ) {
-  let [A, B] = fromInterval;
-  let [C, D] = toInterval;
+  const [A, B] = fromInterval;
+  const [C, D] = toInterval;
   return ((D - C) / (B - A)) * (x - A) + C;
 }

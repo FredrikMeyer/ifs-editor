@@ -93,6 +93,9 @@ class Drawer {
       iterator.iterate();
       const [x, y] = this.toCanvasCoords(pt);
 
+      if (i < 20) {
+        continue;
+      }
       // See https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
       // Might give wrong result if run on a big endian processor
       data[y * canvasData.width + x] =
@@ -159,29 +162,39 @@ interface CanvasProps {
   showAxes: boolean;
 }
 
-export default function Canvas(props: CanvasProps) {
+export default function Canvas({
+  iterations,
+  onCanvasClick,
+  equation,
+  showAxes,
+}: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const drawer = new Drawer(canvasOptions, props.equation, props.showAxes);
+  const drawer = React.useMemo(
+    () => new Drawer(canvasOptions, equation, showAxes),
+    [equation, showAxes]
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas) {
-      window.requestAnimationFrame(() => drawer.draw(canvas, props.iterations));
+      window.requestAnimationFrame(() => drawer.draw(canvas, iterations));
     }
-  }, [props]);
+  }, [iterations, drawer]);
 
-  const onCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
+  const internallOnCanvasClick = (
+    event: React.MouseEvent<HTMLCanvasElement>
+  ) => {
     const pos = drawer.getCursorPosition(
       canvasRef.current as HTMLCanvasElement,
       event
     );
-    props.onCanvasClick(pos);
+    onCanvasClick(pos);
   };
 
   return (
     <canvas
       className="canvas"
-      onClick={(event) => onCanvasClick(event)}
+      onClick={(event) => internallOnCanvasClick(event)}
       ref={canvasRef}
     ></canvas>
   );
