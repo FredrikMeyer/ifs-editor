@@ -3,6 +3,7 @@ import { MouseEvent } from "react";
 import { useRef } from "react";
 import { ColoredPoint, mapInterval, Point } from "./util";
 import { IFSEquation, IFSIterator, View } from "./ifs";
+import { Button } from "@mui/material";
 
 interface DrawerOptions {
   width: number;
@@ -40,23 +41,13 @@ class Drawer {
 
   public toCanvasCoords(point: Point): [number, number] {
     const { x, y } = point;
-    const { canvasOptions } = this;
+    const {
+      canvasOptions: { width, height },
+    } = this;
     // ~~ is a faster rounding method
     return [
-      ~~(
-        mapInterval(
-          [this.view.xMin, this.view.xMax],
-          [0, canvasOptions.width],
-          x
-        ) + 0.5
-      ),
-      ~~(
-        mapInterval(
-          [this.view.yMin, this.view.yMax],
-          [canvasOptions.height, 0],
-          y
-        ) + 0.5
-      ),
+      ~~(mapInterval([this.view.xMin, this.view.xMax], [0, width], x) + 0.5),
+      ~~(mapInterval([this.view.yMin, this.view.yMax], [height, 0], y) + 0.5),
     ];
   }
 
@@ -200,8 +191,12 @@ export default function Canvas({
     });
   };
 
+  const onResetZoom = () => {
+    setView(startingView);
+  };
+
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <canvas
         className="canvas"
         onClick={(event) => onCanvasClick(event)}
@@ -212,6 +207,11 @@ export default function Canvas({
         }}
         ref={canvasRef}
       ></canvas>
+      <div>
+        <Button onClick={onResetZoom} variant="contained">
+          Reset zoom
+        </Button>
+      </div>
     </div>
   );
 }
