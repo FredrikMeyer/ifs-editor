@@ -1,9 +1,8 @@
 import * as React from "react";
-import { IFSEquation, IFSPart } from "./ifs";
 import katex from "katex";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
-
+import { IFSEquation, IFSPart } from "./ifs";
 interface Props {
   equation: IFSEquation;
 }

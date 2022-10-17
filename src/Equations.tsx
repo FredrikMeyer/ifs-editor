@@ -1,5 +1,4 @@
 import * as React from "react";
-import { IFSEquation, IFSCoefficients } from "./ifs";
 import { Slider, Typography } from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import IconButton from "@mui/material/IconButton";
@@ -10,6 +9,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Input from "@mui/material/Input";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { HexColorPicker } from "react-colorful";
+import { IFSEquation, IFSCoefficients } from "./ifs";
 import { Color, hexToColor, toHexString, RED } from "./colors";
 
 interface Props {
