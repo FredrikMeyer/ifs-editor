@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -8,4 +10,10 @@ export default defineConfig({
   },
   base: "/ifs-editor/",
   plugins: [react()],
+  test: {
+    includeSource: ["src/**/*.ts"],
+  },
+  define: {
+    "import.meta.vitest": false,
+  },
 });

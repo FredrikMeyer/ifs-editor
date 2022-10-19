@@ -29,3 +29,25 @@ export function mapInterval(
   const [C, D] = toInterval;
   return ((D - C) / (B - A)) * (x - A) + C;
 }
+
+if (import.meta.vitest) {
+  const { it, expect } = import.meta.vitest;
+
+  it("mapinterval", () => {
+    const answer = mapInterval([0, 1], [0, 2], 1);
+    expect(answer).toBe(2);
+  });
+
+  it("handles negatives", () => {
+    const answer = mapInterval([0, 10], [10, 0], 5);
+    expect(answer).toBe(5);
+  });
+
+  it("Handles direction", () => {
+    const answer1 = mapInterval([0, 1], [1, 0], 0);
+    expect(answer1).toBe(1);
+
+    const answer2 = mapInterval([0, 1], [1, 0], 1);
+    expect(answer2).toBe(0);
+  });
+}
