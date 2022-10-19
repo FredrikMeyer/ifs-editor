@@ -6,5 +6,6 @@ export default defineConfig({
   build: {
     outDir: "./docs",
   },
+  base: "/ifs-editor/",
   plugins: [react()],
 });
