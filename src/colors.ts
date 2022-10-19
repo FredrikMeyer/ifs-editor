@@ -28,6 +28,19 @@ export const BROWN: Color = {
   blue: 40,
 };
 
+export function brightenColor(color: Color, factor: number): Color {
+  const { red: oldRed, blue: oldBlue, green: oldGreen } = color;
+
+  const red = Math.min(oldRed + Math.log(factor));
+  const blue = Math.min(oldBlue + Math.log(factor));
+  const green = Math.min(oldGreen + Math.log(factor));
+  return {
+    red,
+    blue,
+    green,
+  };
+}
+
 export function randomColor(): Color {
   return {
     red: Math.floor(Math.random() * 255),

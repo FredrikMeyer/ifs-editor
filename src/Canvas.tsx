@@ -2,8 +2,8 @@ import * as React from "react";
 import { MouseEvent } from "react";
 import { useRef } from "react";
 import { ColoredPoint, mapInterval, Point } from "./util";
-import { IFSEquation, IFSIterator, View } from "./ifs";
-import { Button } from "@mui/material";
+import { View } from "./ifs";
+import { Button, Slider, Stack } from "@mui/material";
 
 interface DrawerOptions {
   width: number;
@@ -34,7 +34,6 @@ class Drawer {
   private view: View;
 
   constructor(options: DrawerOptions, view: View) {
-    console.log("i was created");
     this.canvasOptions = options;
     this.view = view;
   }
@@ -79,10 +78,6 @@ class Drawer {
       const { color } = coloredPoints[i];
       const [x, y] = this.toCanvasCoords(pt);
 
-      if (i < 20) {
-        continue;
-      }
-
       // See https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
       // Might give wrong result if run on a big endian processor
       data[y * canvasData.width + x] =
@@ -126,26 +121,19 @@ class Drawer {
 }
 
 interface CanvasProps {
-  iterations: number;
-  equation: IFSEquation;
   startingView: View;
   showAxes: boolean;
+  points: ColoredPoint[];
 }
 
 export default function Canvas({
-  iterations,
-  equation,
+  points,
   showAxes,
   startingView,
 }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [view, setView] = React.useState(startingView);
   const drawer = React.useMemo(() => new Drawer(drawerOptions, view), [view]);
-
-  const points = React.useMemo(() => {
-    const iterator = new IFSIterator(equation);
-    return iterator.getPoints(iterations);
-  }, [equation, iterations]);
 
   const [mousePos, setMousePos] = React.useState<[number, number]>([0, 0]);
 
@@ -195,6 +183,16 @@ export default function Canvas({
     setView(startingView);
   };
 
+  const handleXSlider = (_: Event, value: number | number[]) => {
+    const [a, b] = value as number[];
+    setView((oldView) => ({ ...oldView, xMin: a, xMax: b }));
+  };
+
+  const handleYSlider = (_: Event, value: number | number[]) => {
+    const [a, b] = value as number[];
+    setView((oldView) => ({ ...oldView, yMin: a, yMax: b }));
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <canvas
@@ -211,6 +209,29 @@ export default function Canvas({
         <Button onClick={onResetZoom} variant="contained">
           Reset zoom
         </Button>
+        <Stack
+          spacing={2}
+          direction={"column"}
+          sx={{ mb: 1 }}
+          alignItems="center"
+        >
+          <Slider
+            getAriaLabel={() => "X Range"}
+            value={[view.xMin, view.xMax]}
+            onChange={handleXSlider}
+            step={0.001}
+            min={-2}
+            max={2}
+          />
+          <Slider
+            getAriaLabel={() => "Y Range"}
+            value={[view.yMin, view.yMax]}
+            onChange={handleYSlider}
+            step={0.001}
+            min={-2}
+            max={2}
+          />
+        </Stack>
       </div>
     </div>
   );

@@ -15,10 +15,10 @@ export type Examples = typeof exampleNames[number];
 export const examples: Record<Examples, IFSEquation> = {
   eq1: {
     defaultView: {
-      xMin: -1,
-      xMax: 1,
-      yMin: -1,
-      yMax: 1,
+      xMin: -0.85,
+      xMax: 0.95,
+      yMin: -1.41,
+      yMax: 0.39,
     },
     parts: [
       {

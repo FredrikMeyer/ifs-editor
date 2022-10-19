@@ -14,7 +14,7 @@ import { randomColor } from "./colors";
 import Canvas from "./Canvas";
 import Equation from "./Equations";
 import PrettyPrinter from "./PrettyPrinter";
-import { randomEquation, randomIFSPart } from "./ifs";
+import { IFSIterator, randomEquation, randomIFSPart } from "./ifs";
 import { examples, exampleNames, Examples } from "./ifsExamples";
 
 function App() {
@@ -57,6 +57,11 @@ function App() {
     });
   };
 
+  const points = React.useMemo(() => {
+    const iterator = new IFSIterator(currentEquation);
+    return iterator.getPoints(iterations);
+  }, [currentEquation, iterations]);
+
   const [showAxes, setShowAxes] = React.useState(true);
 
   return (
@@ -75,8 +80,7 @@ function App() {
         <Grid item>
           <div className="canvasContainer">
             <Canvas
-              iterations={iterations}
-              equation={currentEquation}
+              points={points}
               startingView={currentEquation.defaultView}
               showAxes={showAxes}
             ></Canvas>
