@@ -93,6 +93,15 @@ class Drawer {
       const { color } = coloredPoints[i];
       const [x, y] = this.toCanvasCoords(pt);
 
+      if (
+        x > this.canvasOptions.width ||
+        y > this.canvasOptions.height ||
+        x < 0 ||
+        y < 0
+      ) {
+        continue;
+      }
+
       // See https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
       // Might give wrong result if run on a big endian processor
       data[y * canvasData.width + x] =
