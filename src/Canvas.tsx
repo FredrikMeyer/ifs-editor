@@ -3,7 +3,7 @@ import { MouseEvent } from "react";
 import { useRef } from "react";
 import { ColoredPoint, mapInterval, Point } from "./util";
 import { View } from "./ifs";
-import { Button, Slider, Stack } from "@mui/material";
+import { Button, Slider, Stack, Box } from "@mui/material";
 
 interface DrawerOptions {
   width: number;
@@ -27,6 +27,21 @@ function toWorldCoords(
     mapInterval([0, width], [xMin, xMax], x),
     mapInterval([height, 0], [yMin, yMax], y),
   ];
+}
+
+if (import.meta.vitest) {
+  const { it, expect } = import.meta.vitest;
+
+  it("works", () => {
+    const options: DrawerOptions = { width: 100, height: 100 };
+
+    const view: View = { xMin: 0, xMax: 1, yMin: 0, yMax: 1 };
+
+    const point = { x: 100, y: 100 };
+    const res = toWorldCoords(options, view, point);
+
+    expect(res).toStrictEqual([1, 0]);
+  });
 }
 
 class Drawer {
@@ -89,10 +104,15 @@ class Drawer {
     if (showAxes) {
       ctx.beginPath();
       ctx.strokeStyle = "black";
-      ctx.moveTo(0.5 * canvas.width, 0);
-      ctx.lineTo(0.5 * canvas.width, canvas.height);
-      ctx.moveTo(0, 0.5 * canvas.height);
-      ctx.lineTo(canvas.width, 0.5 * canvas.height);
+      const [a, b] = this.toCanvasCoords({ x: 0, y: this.view.yMin });
+      const [c, d] = this.toCanvasCoords({ x: 0, y: this.view.yMax });
+      ctx.moveTo(a, b);
+      ctx.lineTo(c, d);
+
+      const [e, f] = this.toCanvasCoords({ x: this.view.xMin, y: 0 });
+      const [g, h] = this.toCanvasCoords({ x: this.view.xMax, y: 0 });
+      ctx.moveTo(e, f);
+      ctx.lineTo(g, h);
       ctx.stroke();
 
       ctx.font = "16px serif";
@@ -133,6 +153,7 @@ export default function Canvas({
 }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [view, setView] = React.useState(startingView);
+
   const drawer = React.useMemo(() => new Drawer(drawerOptions, view), [view]);
 
   const [mousePos, setMousePos] = React.useState<[number, number]>([0, 0]);
@@ -141,9 +162,11 @@ export default function Canvas({
     const canvas = canvasRef.current;
     let requestId: number | null = null;
     if (canvas) {
-      requestId = window.requestAnimationFrame(() =>
-        drawer.draw(canvas, points, mousePos, showAxes)
-      );
+      requestId = window.requestAnimationFrame(() => {
+        /* const startTime = performance.now(); */
+        drawer.draw(canvas, points, mousePos, showAxes);
+        /* const duration = performance.now() - startTime; */
+      });
     }
 
     return () => window.cancelAnimationFrame(requestId || 0);
@@ -183,14 +206,46 @@ export default function Canvas({
     setView(startingView);
   };
 
-  const handleXSlider = (_: Event, value: number | number[]) => {
+  const handleXSlider = (
+    _: Event,
+    value: number | number[],
+    activeThumb: number
+  ) => {
     const [a, b] = value as number[];
-    setView((oldView) => ({ ...oldView, xMin: a, xMax: b }));
+    if (activeThumb === 0) {
+      setView((oldView) => {
+        const dist = oldView.xMax - oldView.xMin;
+
+        return { ...oldView, xMin: a, xMax: a + dist };
+      });
+    } else {
+      setView((oldView) => {
+        const dist = oldView.xMax - oldView.xMin;
+
+        return { ...oldView, xMin: b - dist, xMax: b };
+      });
+    }
   };
 
-  const handleYSlider = (_: Event, value: number | number[]) => {
+  const handleYSlider = (
+    _: Event,
+    value: number | number[],
+    activeThumb: number
+  ) => {
     const [a, b] = value as number[];
-    setView((oldView) => ({ ...oldView, yMin: a, yMax: b }));
+    if (activeThumb === 0) {
+      setView((oldView) => {
+        const dist = oldView.yMax - oldView.yMin;
+
+        return { ...oldView, yMin: a, yMax: a + dist };
+      });
+    } else {
+      setView((oldView) => {
+        const dist = oldView.yMax - oldView.yMin;
+
+        return { ...oldView, yMin: b - dist, yMax: b };
+      });
+    }
   };
 
   return (
@@ -209,28 +264,29 @@ export default function Canvas({
         <Button onClick={onResetZoom} variant="contained">
           Reset zoom
         </Button>
-        <Stack
-          spacing={2}
-          direction={"column"}
-          sx={{ mb: 1 }}
-          alignItems="center"
-        >
-          <Slider
-            getAriaLabel={() => "X Range"}
-            value={[view.xMin, view.xMax]}
-            onChange={handleXSlider}
-            step={0.001}
-            min={-2}
-            max={2}
-          />
-          <Slider
-            getAriaLabel={() => "Y Range"}
-            value={[view.yMin, view.yMax]}
-            onChange={handleYSlider}
-            step={0.001}
-            min={-2}
-            max={2}
-          />
+        <Stack direction="row" spacing={2} sx={{ mb: 1 }} alignItems="center">
+          <Box sx={{ width: "300px" }}>
+            x
+            <Slider
+              getAriaLabel={() => "X Range"}
+              value={[view.xMin, view.xMax]}
+              onChange={handleXSlider}
+              step={0.001}
+              min={-2}
+              max={2}
+            />
+          </Box>
+          <Box sx={{ width: "300px" }}>
+            y
+            <Slider
+              getAriaLabel={() => "Y Range"}
+              value={[view.yMin, view.yMax]}
+              onChange={handleYSlider}
+              step={0.001}
+              min={-2}
+              max={2}
+            />
+          </Box>
         </Stack>
       </div>
     </div>

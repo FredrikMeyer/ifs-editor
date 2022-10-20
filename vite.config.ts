@@ -11,7 +11,7 @@ export default defineConfig({
   base: "/ifs-editor/",
   plugins: [react()],
   test: {
-    includeSource: ["src/**/*.ts"],
+    includeSource: ["src/**/*.ts*"],
   },
   define: {
     "import.meta.vitest": false,
