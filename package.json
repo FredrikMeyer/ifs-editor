@@ -22,7 +22,7 @@
     "@typescript-eslint/parser": "^5.40.0",
     "@vitejs/plugin-react": "^2.1.0",
     "@vitest/ui": "^0.24.3",
-    "eslint": "^8.25.0",
+    "eslint": "^8.26.0",
     "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^2.7.1",
@@ -36,7 +36,7 @@
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.9",
-    "katex": "^0.16.2",
+    "katex": "^0.16.3",
     "react": "^18.0.0",
     "react-colorful": "^5.6.1",
     "react-dom": "^18.0.0"
