@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Slider, Typography } from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import IconButton from "@mui/material/IconButton";

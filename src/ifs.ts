@@ -1,4 +1,5 @@
-import { BLUE, brightenColor, Color, RED } from "./colors";
+import { BLUE, Color, RED } from "./colors";
+import { examples } from "./ifsExamples";
 import { ColoredPoint, probToIndex } from "./util";
 
 export interface IFSCoefficients {
@@ -66,7 +67,7 @@ export class IFSIterator {
     this.probabilites = equation.parts.map((p) => p.probability);
   }
 
-  private iterate(prev: ColoredPoint, iterationN: number): ColoredPoint {
+  private iterate(prev: ColoredPoint): ColoredPoint {
     const { x, y } = prev;
 
     const r = Math.random();
@@ -96,7 +97,7 @@ export class IFSIterator {
     for (let i = 0; i < iterations; i++) {
       // Avoid random points
       if (i > 20) {
-        res.push(this.iterate(res[res.length - 1], i));
+        res.push(this.iterate(res[res.length - 1]));
 
         // if (i > 30) {
         //   console.log(res);
@@ -104,7 +105,6 @@ export class IFSIterator {
         // }
       }
     }
-
     return res;
   }
 }

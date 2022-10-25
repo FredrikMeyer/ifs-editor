@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Typography, Slider, Link } from "@mui/material";
 import Button from "@mui/material/Button";
 import Select, { SelectChangeEvent } from "@mui/material/Select";

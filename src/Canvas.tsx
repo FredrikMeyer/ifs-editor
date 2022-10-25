@@ -1,9 +1,10 @@
-import * as React from "react";
+import React from "react";
 import { MouseEvent } from "react";
 import { useRef } from "react";
 import { ColoredPoint, mapInterval, Point } from "./util";
 import { View } from "./ifs";
 import { Button, Slider, Stack, Box } from "@mui/material";
+import { toRGB } from "./colors";
 
 interface DrawerOptions {
   width: number;
@@ -91,6 +92,7 @@ class Drawer {
     for (let i = 0; i < coloredPoints.length; i++) {
       const pt = coloredPoints[i];
       const { color } = coloredPoints[i];
+      const rgbColor = color.type === "RGB" ? color : toRGB(color);
       const [x, y] = this.toCanvasCoords(pt);
 
       if (
@@ -104,8 +106,12 @@ class Drawer {
 
       // See https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
       // Might give wrong result if run on a big endian processor
+
       data[y * canvasData.width + x] =
-        (255 << 24) | (color.blue << 16) | (color.green << 8) | color.red;
+        (255 << 24) |
+        (rgbColor.blue << 16) |
+        (rgbColor.green << 8) |
+        rgbColor.red;
     }
     canvasData.data.set(buf8);
     ctx.putImageData(canvasData, 0, 0);

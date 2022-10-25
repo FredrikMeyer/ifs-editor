@@ -30,6 +30,20 @@ export function mapInterval(
   return ((D - C) / (B - A)) * (x - A) + C;
 }
 
+export function countByValue<E extends string | number>(
+  vals: E[]
+): Record<E, number> {
+  const b = vals.reduce((prev, curr) => {
+    if (prev[curr]) {
+      return { ...prev, [curr]: prev[curr] + 1 };
+    } else {
+      return { ...prev, [curr]: 1 };
+    }
+  }, {} as Record<E, number>);
+
+  return b;
+}
+
 if (import.meta.vitest) {
   const { it, expect } = import.meta.vitest;
 
@@ -49,5 +63,13 @@ if (import.meta.vitest) {
 
     const answer2 = mapInterval([0, 1], [1, 0], 1);
     expect(answer2).toBe(0);
+  });
+
+  it("countyByValue works", () => {
+    const res1 = countByValue([1, 1, 1, 1]);
+    expect(res1).toStrictEqual({ 1: 4 });
+
+    const res2 = countByValue([1, 1, 2, 2, 2.5]);
+    expect(res2).toStrictEqual({ 1: 2, 2: 2, 2.5: 1 });
   });
 }
