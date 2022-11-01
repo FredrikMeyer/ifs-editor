@@ -169,6 +169,10 @@ export default function Canvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [view, setView] = React.useState(startingView);
 
+  React.useEffect(() => {
+    setView(startingView);
+  }, [startingView]);
+
   const drawer = React.useMemo(() => new Drawer(drawerOptions, view), [view]);
 
   const [mousePos, setMousePos] = React.useState<[number, number]>([0, 0]);
@@ -287,8 +291,8 @@ export default function Canvas({
               value={[view.xMin, view.xMax]}
               onChange={handleXSlider}
               step={0.001}
-              min={-2}
-              max={2}
+              min={startingView.xMin}
+              max={startingView.xMax}
             />
           </Box>
           <Box sx={{ width: "300px" }}>
@@ -298,8 +302,8 @@ export default function Canvas({
               value={[view.yMin, view.yMax]}
               onChange={handleYSlider}
               step={0.001}
-              min={-2}
-              max={2}
+              min={startingView.yMin}
+              max={startingView.yMax}
             />
           </Box>
         </Stack>
