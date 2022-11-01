@@ -156,7 +156,6 @@ export default function Equation(props: Props) {
         ...props.equation.parts[idx],
         color: color,
       };
-      console.log("called");
       onUpdateEquation({ ...props.equation, parts: newParts });
     };
 

@@ -3,7 +3,7 @@ import { MouseEvent } from "react";
 import { useRef } from "react";
 import { ColoredPoint, mapInterval, Point } from "./util";
 import { View } from "./ifs";
-import { Button, Slider, Stack, Box } from "@mui/material";
+import { Button, Slider, Stack, Box, Typography } from "@mui/material";
 import { toRGB } from "./colors";
 
 interface DrawerOptions {
@@ -207,7 +207,7 @@ export default function Canvas({
     const newyMax = view.yMax + diffy;
     const newyMin = view.yMin + diffy;
 
-    const k = 0.9;
+    const k = event.shiftKey ? 1 / 0.9 : 0.9;
     const newxMaxScaled = k * newxMax - x * k + x;
     const newxMinScaled = k * newxMin - x * k + x;
     const newyMaxScaled = k * newyMax - y * k + y;
@@ -280,9 +280,14 @@ export default function Canvas({
         ref={canvasRef}
       ></canvas>
       <div>
-        <Button onClick={onResetZoom} variant="contained">
-          Reset zoom
-        </Button>
+        <div style={{ display: "flex" }}>
+          <Button onClick={onResetZoom} variant="contained">
+            Reset zoom
+          </Button>
+          <Typography sx={{ padding: "4px" }}>
+            Zoom by clicking. Zoom out by shift-clicking.
+          </Typography>
+        </div>
         <Stack direction="row" spacing={2} sx={{ mb: 1 }} alignItems="center">
           <Box sx={{ width: "300px" }}>
             x

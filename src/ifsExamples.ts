@@ -394,8 +394,8 @@ export const examples: Record<Examples, IFSEquation> = {
     defaultView: {
       xMin: 0,
       xMax: 1,
-      yMin: 0,
-      yMax: 1,
+      yMin: 0.5,
+      yMax: 1.5,
     },
     parts: [
       {
