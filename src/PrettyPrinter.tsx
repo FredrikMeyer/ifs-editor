@@ -34,7 +34,7 @@ function LatexPrinter(props: Props) {
 }
 
 export default function PrettyPrinter(props: Props) {
-  const [latex, setShowLatex] = React.useState(false);
+  const [latex, setShowLatex] = React.useState(true);
   const handleCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
     setShowLatex(event.target.checked);
   };

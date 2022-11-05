@@ -121,7 +121,7 @@ function App() {
                   </MenuItem>
                 </Select>
               </div>
-              <div>
+              <div style={{ alignSelf: "center" }}>
                 <IconButton onClick={onClickAdd} size="large">
                   <ControlPointIcon className="addIcon" />
                 </IconButton>

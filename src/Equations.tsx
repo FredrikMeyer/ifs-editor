@@ -32,10 +32,12 @@ function SingleCoefficent(props: {
 
   const id = `${props.name}-slider`;
   return (
-    <div className="singleCoefficent">
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs>
+    <div>
+      <Grid container spacing={1} alignItems="center">
+        <Grid item>
           <Typography id={id}>{props.name}</Typography>
+        </Grid>
+        <Grid item xs>
           <Slider
             aria-labelledby={id}
             value={props.value}
@@ -43,6 +45,7 @@ function SingleCoefficent(props: {
             min={-1}
             max={1}
             step={0.01}
+            size="small"
           />
         </Grid>
         <Grid item>
@@ -50,6 +53,7 @@ function SingleCoefficent(props: {
             style={{ width: "100px" }}
             value={props.value}
             onChange={handleInputChange}
+            size="small"
             inputProps={{
               step: 0.01,
               min: 0,
@@ -89,14 +93,10 @@ function Coefficient(props: {
 
   return (
     <div className="coefficientSet">
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
+      <Accordion TransitionProps={{ timeout: 200 }}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <div className="equationHeader">
-            <h2>Index: {index}</h2>
+            <Typography variant="h5">Index: {index}</Typography>
             <IconButton
               onClick={props.onClickDelete}
               className="deleteIcon"

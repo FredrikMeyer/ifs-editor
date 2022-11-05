@@ -29,10 +29,6 @@ body {
 
 .coefficientSet {
     width: 300px;
-    padding: 10px;
-    padding-top: 0px;
-    /* border: 1px dotted gray; */
-    margin: 10px;
 }
 
 .coefficientSet .deleteIcon {

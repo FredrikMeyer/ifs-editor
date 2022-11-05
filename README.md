@@ -30,6 +30,8 @@ Would be interesting to parse his IFS file format.
 
 See this [Julia set example](https://rustwasm.github.io/wasm-bindgen/examples/julia.html).
 
+Or perhaps AssemblyScript? Example [here](https://www.assemblyscript.org/examples/interference.html).
+
 ### TODOS
 
  - Add animation on parameters (i.e. let a parameter animate from 0 to max value)
