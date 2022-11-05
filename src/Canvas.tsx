@@ -1,7 +1,7 @@
 import React from "react";
 import { MouseEvent } from "react";
 import { useRef } from "react";
-import { ColoredPoint, mapInterval, Point } from "./util";
+import { ColoredPoint, mapFromInterval, Point } from "./util";
 import { View } from "./ifs";
 import { Button, Slider, Stack, Box, Typography } from "@mui/material";
 import { toRGB } from "./colors";
@@ -25,8 +25,8 @@ function toWorldCoords(
   const { width, height } = options;
   const { xMin, xMax, yMax, yMin } = view;
   return [
-    mapInterval([0, width], [xMin, xMax], x),
-    mapInterval([height, 0], [yMin, yMax], y),
+    mapFromInterval(0, width, xMin, xMax, x),
+    mapFromInterval(height, 0, yMin, yMax, y),
   ];
 }
 
@@ -61,8 +61,8 @@ class Drawer {
     } = this;
     // ~~ is a faster rounding method
     return [
-      ~~(mapInterval([this.view.xMin, this.view.xMax], [0, width], x) + 0.5),
-      ~~(mapInterval([this.view.yMin, this.view.yMax], [height, 0], y) + 0.5),
+      ~~(mapFromInterval(this.view.xMin, this.view.xMax, 0, width, x) + 0.5),
+      ~~(mapFromInterval(this.view.yMin, this.view.yMax, height, 0, y) + 0.5),
     ];
   }
 

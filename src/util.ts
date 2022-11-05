@@ -20,6 +20,14 @@ export function probToIndex(probs: number[], prob: number) {
   return probs.length - 1;
 }
 
+/**
+ * Map from interval fromInterval to toInterval.
+ * @param fromInterval
+ * @param toInterval
+ * @param x
+ * @returns A point in the mapped interval.
+ * @deprecated Prefer mapFromInterval, which is faster.
+ */
 export function mapInterval(
   fromInterval: Interval,
   toInterval: Interval,
@@ -28,6 +36,29 @@ export function mapInterval(
   const [A, B] = fromInterval;
   const [C, D] = toInterval;
   return ((D - C) / (B - A)) * (x - A) + C;
+}
+
+/**
+ * Map from one interval to another. Prefer this over mapInterval because
+ * it does not use destructuring, which gives a 15% performance boost,
+ * per vitest bench tests. In fact, in practice, the JIT probably made this
+ * much faster after a few in-browser runs (it does no longer show up in the Chrome profiler).
+
+ * @param a
+ * @param b
+ * @param c
+ * @param d
+ * @param x
+ * @returns
+ */
+export function mapFromInterval(
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+  x: number
+) {
+  return ((d - c) / (b - a)) * (x - a) + c;
 }
 
 export function countByValue<E extends string | number>(
@@ -48,20 +79,20 @@ if (import.meta.vitest) {
   const { it, expect } = import.meta.vitest;
 
   it("mapinterval", () => {
-    const answer = mapInterval([0, 1], [0, 2], 1);
+    const answer = mapFromInterval(0, 1, 0, 2, 1);
     expect(answer).toBe(2);
   });
 
   it("handles negatives", () => {
-    const answer = mapInterval([0, 10], [10, 0], 5);
+    const answer = mapFromInterval(0, 10, 10, 0, 5);
     expect(answer).toBe(5);
   });
 
   it("Handles direction", () => {
-    const answer1 = mapInterval([0, 1], [1, 0], 0);
+    const answer1 = mapFromInterval(0, 1, 1, 0, 0);
     expect(answer1).toBe(1);
 
-    const answer2 = mapInterval([0, 1], [1, 0], 1);
+    const answer2 = mapFromInterval(0, 1, 1, 0, 1);
     expect(answer2).toBe(0);
   });
 
