@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import katex from "katex";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";

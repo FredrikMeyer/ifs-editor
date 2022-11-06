@@ -1,5 +1,4 @@
 import { BLUE, Color, RED } from "./colors";
-import { examples } from "./ifsExamples";
 import { ColoredPoint, probToIndex } from "./util";
 
 export interface IFSCoefficients {
@@ -94,16 +93,9 @@ export class IFSIterator {
         color: RED,
       },
     ];
-    for (let i = 0; i < iterations; i++) {
-      // Avoid random points
-      if (i > 20) {
-        res.push(this.iterate(res[res.length - 1]));
-
-        // if (i > 30) {
-        //   console.log(res);
-        //   break;
-        // }
-      }
+    // Avoid random points by starting at i=20
+    for (let i = 20; i < iterations; i++) {
+      res.push(this.iterate(res[res.length - 1]));
     }
     return res;
   }

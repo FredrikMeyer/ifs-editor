@@ -1,5 +1,5 @@
+import React from "react";
 import { Slider } from "@mui/material";
-import * as React from "react";
 import { IFSPart } from "./ifs";
 
 export default function ProbabilitiesSlider(props: {

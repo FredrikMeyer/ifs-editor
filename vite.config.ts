@@ -12,6 +12,9 @@ export default defineConfig({
   plugins: [react()],
   test: {
     includeSource: ["src/**/*.ts*"],
+    coverage: {
+      reporter: ["text", "html"],
+    },
   },
   define: {
     "import.meta.vitest": false,

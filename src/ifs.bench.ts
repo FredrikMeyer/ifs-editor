@@ -19,16 +19,20 @@ describe("ifs", () => {
 
 describe("map interval", () => {
   bench("mapinterval", () => {
-    const a = [0, Math.random() * 5] as Interval;
-    const b = [Math.random() + 6, Math.random() + 8] as Interval;
-    mapInterval(a, b, Math.random());
+    for (let i = 0; i < 1000; i++) {
+      const a = [0, Math.random() * 5] as Interval;
+      const b = [Math.random() + 6, Math.random() + 8] as Interval;
+      mapInterval(a, b, Math.random());
+    }
   });
 
   bench("mapinterval2", () => {
-    const a = 0;
-    const b = Math.random() * 5;
-    const c = Math.random() + 6;
-    const d = Math.random() + 8;
-    mapFromInterval(a, b, c, d, Math.random());
+    for (let i = 0; i < 1000; i++) {
+      const a = 0;
+      const b = Math.random() * 5;
+      const c = Math.random() + 6;
+      const d = Math.random() + 8;
+      mapFromInterval(a, b, c, d, Math.random());
+    }
   });
 });

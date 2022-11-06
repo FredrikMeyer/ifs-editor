@@ -49,7 +49,7 @@ export function mapInterval(
  * @param c
  * @param d
  * @param x
- * @returns
+ * @returns The transformed point.
  */
 export function mapFromInterval(
   a: number,
@@ -102,5 +102,21 @@ if (import.meta.vitest) {
 
     const res2 = countByValue([1, 1, 2, 2, 2.5]);
     expect(res2).toStrictEqual({ 1: 2, 2: 2, 2.5: 1 });
+  });
+
+  it("probToIndex works", () => {
+    const a = probToIndex([0.5, 0.5], 0.1);
+
+    expect(a).toEqual(0);
+
+    const b = probToIndex([0.1, 0.2, 0.7], 0.5);
+
+    expect(b).toEqual(2);
+  });
+
+  it("probtoIndex for high values", () => {
+    const a = probToIndex([0.4, 0.6], 1);
+
+    expect(a).toEqual(1);
   });
 }

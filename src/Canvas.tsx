@@ -60,6 +60,7 @@ class Drawer {
       canvasOptions: { width, height },
     } = this;
     // ~~ is a faster rounding method
+    // http://rocha.la/JavaScript-bitwise-operators-in-practice
     return [
       ~~(mapFromInterval(this.view.xMin, this.view.xMax, 0, width, x) + 0.5),
       ~~(mapFromInterval(this.view.yMin, this.view.yMax, height, 0, y) + 0.5),
@@ -93,7 +94,7 @@ class Drawer {
       const pt = coloredPoints[i];
       const { color } = coloredPoints[i];
       const rgbColor = color.type === "RGB" ? color : toRGB(color);
-      const [x, y] = this.toCanvasCoords(pt);
+      const [x, y] = this.toCanvasCoords(pt); // TODO: test om performance er raskere om dette flyttes ut
 
       if (
         x > this.canvasOptions.width ||
