@@ -32,6 +32,10 @@ See this [Julia set example](https://rustwasm.github.io/wasm-bindgen/examples/ju
 
 Or perhaps AssemblyScript? Example [here](https://www.assemblyscript.org/examples/interference.html).
 
+### Java implementation
+
+[jonas-lj/IFS-Fractals](https://github.com/jonas-lj/IFS-Fractals)
+
 ### TODOS
 
  - Add animation on parameters (i.e. let a parameter animate from 0 to max value)
