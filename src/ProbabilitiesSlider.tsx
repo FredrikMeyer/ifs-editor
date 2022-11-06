@@ -11,7 +11,7 @@ export default function ProbabilitiesSlider(props: {
     props.onUpdateProbs(newValue as number[]);
   };
   return (
-    <div>
+    <div style={{ width: "300px" }}>
       <Slider
         valueLabelDisplay="auto"
         value={probs}

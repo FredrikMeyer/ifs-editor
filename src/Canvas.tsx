@@ -3,7 +3,7 @@ import { MouseEvent } from "react";
 import { useRef } from "react";
 import { ColoredPoint, mapFromInterval, Point } from "./util";
 import { View } from "./ifs";
-import { Button, Slider, Stack, Box, Typography } from "@mui/material";
+import { Button, Slider, Stack, Box, Typography, Grid } from "@mui/material";
 import { toRGB } from "./colors";
 
 interface DrawerOptions {
@@ -11,10 +11,32 @@ interface DrawerOptions {
   height: number;
 }
 
-const drawerOptions: DrawerOptions = {
-  width: 800,
-  height: 800,
-};
+function useWindowSize() {
+  // From https://usehooks.com/useWindowSize/
+  const [windowSize, setWindowSize] = React.useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  React.useEffect(() => {
+    // Handler to call on window resize
+    function handleResize() {
+      // Set window width/height to state
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+    // Call handler right away so state gets updated with initial window size
+    handleResize();
+    // Remove event listener on cleanup
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowSize;
+}
 
 function toWorldCoords(
   options: DrawerOptions,
@@ -28,21 +50,6 @@ function toWorldCoords(
     mapFromInterval(0, width, xMin, xMax, x),
     mapFromInterval(height, 0, yMin, yMax, y),
   ];
-}
-
-if (import.meta.vitest) {
-  const { it, expect } = import.meta.vitest;
-
-  it("works", () => {
-    const options: DrawerOptions = { width: 100, height: 100 };
-
-    const view: View = { xMin: 0, xMax: 1, yMin: 0, yMax: 1 };
-
-    const point = { x: 100, y: 100 };
-    const res = toWorldCoords(options, view, point);
-
-    expect(res).toStrictEqual([1, 0]);
-  });
 }
 
 class Drawer {
@@ -76,13 +83,14 @@ class Drawer {
     // todo: bruk window.devicePixelRatio
     /* canvas.width = 2 * WIDTH; */
     /* canvas.height = 2 * HEIGHT; */
-    const WIDTH = drawerOptions.width;
-    const HEIGHT = drawerOptions.height;
+    const WIDTH = this.canvasOptions.width;
+    const HEIGHT = this.canvasOptions.height;
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
     canvas.style.width = `${WIDTH}px`;
     canvas.style.height = `${HEIGHT}px`;
-    const ctx = canvas.getContext("2d");
+
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
     if (!ctx) return;
     const canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -156,6 +164,15 @@ class Drawer {
   }
 }
 
+function computeCanvasSize(width: number, height: number) {
+  const maxWidth = width - 350;
+  const maxHeight = height - 200;
+
+  const common = Math.min(maxHeight, maxWidth);
+
+  return { width: common, height: common };
+}
+
 interface CanvasProps {
   startingView: View;
   showAxes: boolean;
@@ -173,8 +190,12 @@ export default function Canvas({
   React.useEffect(() => {
     setView(startingView);
   }, [startingView]);
+  const { width, height } = useWindowSize();
 
-  const drawer = React.useMemo(() => new Drawer(drawerOptions, view), [view]);
+  const drawer = React.useMemo(
+    () => new Drawer(computeCanvasSize(width, height), view),
+    [view, width, height]
+  );
 
   const [mousePos, setMousePos] = React.useState<[number, number]>([0, 0]);
 
@@ -269,51 +290,74 @@ export default function Canvas({
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <canvas
-        className="canvas"
-        onClick={(event) => onCanvasClick(event)}
-        onMouseMove={(e) => {
-          if (canvasRef.current) {
-            setMousePos(drawer.getCursorPosition(canvasRef.current, e));
-          }
-        }}
-        ref={canvasRef}
-      ></canvas>
-      <div>
-        <div style={{ display: "flex" }}>
-          <Button onClick={onResetZoom} variant="contained">
-            Reset zoom
-          </Button>
-          <Typography sx={{ padding: "4px" }}>
-            Zoom by clicking. Zoom out by shift-clicking.
-          </Typography>
-        </div>
-        <Stack direction="row" spacing={2} sx={{ mb: 1 }} alignItems="center">
-          <Box sx={{ width: "300px" }}>
-            x
-            <Slider
-              getAriaLabel={() => "X Range"}
-              value={[view.xMin, view.xMax]}
-              onChange={handleXSlider}
-              step={0.001}
-              min={startingView.xMin}
-              max={startingView.xMax}
-            />
-          </Box>
-          <Box sx={{ width: "300px" }}>
-            y
-            <Slider
-              getAriaLabel={() => "Y Range"}
-              value={[view.yMin, view.yMax]}
-              onChange={handleYSlider}
-              step={0.001}
-              min={startingView.yMin}
-              max={startingView.yMax}
-            />
-          </Box>
-        </Stack>
-      </div>
-    </div>
+    <Grid container direction="column" sx={{ marginLeft: "10px" }}>
+      <Grid item>
+        <canvas
+          className="canvas"
+          onClick={(event) => onCanvasClick(event)}
+          onMouseMove={(e) => {
+            if (canvasRef.current) {
+              setMousePos(drawer.getCursorPosition(canvasRef.current, e));
+            }
+          }}
+          ref={canvasRef}
+        ></canvas>
+      </Grid>
+      <Grid item>
+        <Grid container spacing={2}>
+          <Grid item>
+            <Button onClick={onResetZoom} variant="contained">
+              Reset zoom
+            </Button>
+          </Grid>
+          <Grid item>
+            <Typography sx={{ padding: "4px" }}>
+              Zoom by clicking. Zoom out by shift-clicking.
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Stack direction="row" spacing={3} sx={{ mb: 1 }} alignItems="center">
+            <Box sx={{ width: "300px" }}>
+              x
+              <Slider
+                getAriaLabel={() => "X Range"}
+                value={[view.xMin, view.xMax]}
+                onChange={handleXSlider}
+                step={0.001}
+                min={startingView.xMin}
+                max={startingView.xMax}
+              />
+            </Box>
+            <Box sx={{ width: "300px" }}>
+              y
+              <Slider
+                getAriaLabel={() => "Y Range"}
+                value={[view.yMin, view.yMax]}
+                onChange={handleYSlider}
+                step={0.001}
+                min={startingView.yMin}
+                max={startingView.yMax}
+              />
+            </Box>
+          </Stack>
+        </Grid>
+      </Grid>
+    </Grid>
   );
+}
+
+if (import.meta.vitest) {
+  const { it, expect } = import.meta.vitest;
+
+  it("works", () => {
+    const options: DrawerOptions = { width: 100, height: 100 };
+
+    const view: View = { xMin: 0, xMax: 1, yMin: 0, yMax: 1 };
+
+    const point = { x: 100, y: 100 };
+    const res = toWorldCoords(options, view, point);
+
+    expect(res).toStrictEqual([1, 0]);
+  });
 }

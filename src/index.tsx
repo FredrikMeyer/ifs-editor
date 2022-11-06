@@ -5,6 +5,7 @@ import {
   StyledEngineProvider,
   createTheme,
 } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
 import "./style.css";
 import App from "./App";
 
@@ -26,10 +27,9 @@ if (mountNode) {
   const root = createRoot(mountNode);
 
   root.render(
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <App />
+    </ThemeProvider>
   );
 }
