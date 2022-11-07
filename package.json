@@ -23,7 +23,7 @@
     "@vitejs/plugin-react": "^2.2.0",
     "@vitest/coverage-c8": "^0.24.5",
     "@vitest/ui": "^0.24.3",
-    "eslint": "^8.26.0",
+    "eslint": "^8.27.0",
     "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^2.7.1",
@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
+    "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.9",
     "katex": "^0.16.3",
