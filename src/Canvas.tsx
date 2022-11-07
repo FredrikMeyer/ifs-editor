@@ -1,7 +1,7 @@
 import React from "react";
 import { MouseEvent } from "react";
 import { useRef } from "react";
-import { ColoredPoint, mapFromInterval, Point } from "./util";
+import { ColoredPoint, countByValue, mapFromInterval, Point } from "./util";
 import { View } from "./ifs";
 import { Button, Slider, Stack, Box, Typography, Grid } from "@mui/material";
 import { toRGB } from "./colors";
@@ -61,7 +61,7 @@ class Drawer {
     this.view = view;
   }
 
-  public toCanvasCoords(point: Point): [number, number] {
+  private toCanvasCoords(point: Point): [number, number] {
     const { x, y } = point;
     const {
       canvasOptions: { width, height },
@@ -72,6 +72,10 @@ class Drawer {
       ~~(mapFromInterval(this.view.xMin, this.view.xMax, 0, width, x) + 0.5),
       ~~(mapFromInterval(this.view.yMin, this.view.yMax, height, 0, y) + 0.5),
     ];
+  }
+
+  private canvasCoordsToImageDataIndex(x: number, y: number): number {
+    return y * this.canvasOptions.width + x;
   }
 
   public draw(
@@ -98,6 +102,12 @@ class Drawer {
     const buf8 = new Uint8ClampedArray(buf);
     const data = new Uint32Array(buf);
 
+    /* const temp = coloredPoints.map((p) => this.toCanvasCoords(p)); */
+    /* console.log(temp); */
+    // TODO: move conversion to canvas coords to before draw loop
+    // then the computed points can be modified by duplicates
+    // to be able to color
+
     for (let i = 0; i < coloredPoints.length; i++) {
       const pt = coloredPoints[i];
       const { color } = coloredPoints[i];
@@ -116,7 +126,7 @@ class Drawer {
       // See https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
       // Might give wrong result if run on a big endian processor
 
-      data[y * canvasData.width + x] =
+      data[this.canvasCoordsToImageDataIndex(x, y)] =
         (255 << 24) |
         (rgbColor.blue << 16) |
         (rgbColor.green << 8) |
@@ -126,30 +136,34 @@ class Drawer {
     ctx.putImageData(canvasData, 0, 0);
 
     if (showAxes) {
-      ctx.beginPath();
-      ctx.strokeStyle = "black";
-      const [a, b] = this.toCanvasCoords({ x: 0, y: this.view.yMin });
-      const [c, d] = this.toCanvasCoords({ x: 0, y: this.view.yMax });
-      ctx.moveTo(a, b);
-      ctx.lineTo(c, d);
-
-      const [e, f] = this.toCanvasCoords({ x: this.view.xMin, y: 0 });
-      const [g, h] = this.toCanvasCoords({ x: this.view.xMax, y: 0 });
-      ctx.moveTo(e, f);
-      ctx.lineTo(g, h);
-      ctx.stroke();
-
-      ctx.font = "16px serif";
-      const { xMax, xMin, yMin, yMax } = this.view;
-      ctx.fillText(`x: [${xMin.toFixed(2)}, ${xMax.toFixed(2)}]`, 10, 40);
-      ctx.fillText(`y: [${yMin.toFixed(2)}, ${yMax.toFixed(2)}]`, 10, 60);
-
-      ctx.fillText(
-        `[x,y]: [${mousePos[0].toFixed(2)}, ${mousePos[1].toFixed(2)}]`,
-        10,
-        80
-      );
+      this.drawAxes(ctx, mousePos);
     }
+  }
+
+  private drawAxes(ctx: CanvasRenderingContext2D, mousePos: [number, number]) {
+    ctx.beginPath();
+    ctx.strokeStyle = "black";
+    const [a, b] = this.toCanvasCoords({ x: 0, y: this.view.yMin });
+    const [c, d] = this.toCanvasCoords({ x: 0, y: this.view.yMax });
+    ctx.moveTo(a, b);
+    ctx.lineTo(c, d);
+
+    const [e, f] = this.toCanvasCoords({ x: this.view.xMin, y: 0 });
+    const [g, h] = this.toCanvasCoords({ x: this.view.xMax, y: 0 });
+    ctx.moveTo(e, f);
+    ctx.lineTo(g, h);
+    ctx.stroke();
+
+    ctx.font = "16px serif";
+    const { xMax, xMin, yMin, yMax } = this.view;
+    ctx.fillText(`x: [${xMin.toFixed(2)}, ${xMax.toFixed(2)}]`, 10, 40);
+    ctx.fillText(`y: [${yMin.toFixed(2)}, ${yMax.toFixed(2)}]`, 10, 60);
+
+    ctx.fillText(
+      `[x,y]: [${mousePos[0].toFixed(2)}, ${mousePos[1].toFixed(2)}]`,
+      10,
+      80
+    );
   }
 
   public getCursorPosition(
