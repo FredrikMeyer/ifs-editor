@@ -98,10 +98,16 @@ if (import.meta.vitest) {
 
   it("countyByValue works", () => {
     const res1 = countByValue([1, 1, 1, 1]);
-    expect(res1).toStrictEqual({ 1: 4 });
+    expect(res1).toStrictEqual(new Map([[1, 4]]));
 
     const res2 = countByValue([1, 1, 2, 2, 2.5]);
-    expect(res2).toStrictEqual({ 1: 2, 2: 2, 2.5: 1 });
+    expect(res2).toStrictEqual(
+      new Map([
+        [1, 2],
+        [2, 2],
+        [2.5, 1],
+      ])
+    );
   });
 
   it("probToIndex works", () => {
