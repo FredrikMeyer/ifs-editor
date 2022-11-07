@@ -18,7 +18,7 @@ describe("ifs", () => {
 });
 
 describe("map interval", () => {
-  bench("mapinterval", () => {
+  bench.skip("mapinterval", () => {
     for (let i = 0; i < 1000; i++) {
       const a = [0, Math.random() * 5] as Interval;
       const b = [Math.random() + 6, Math.random() + 8] as Interval;
@@ -26,7 +26,7 @@ describe("map interval", () => {
     }
   });
 
-  bench("mapinterval2", () => {
+  bench.skip("mapinterval2", () => {
     for (let i = 0; i < 1000; i++) {
       const a = 0;
       const b = Math.random() * 5;

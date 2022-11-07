@@ -61,18 +61,18 @@ export function mapFromInterval(
   return ((d - c) / (b - a)) * (x - a) + c;
 }
 
-export function countByValue<E extends string | number>(
-  vals: E[]
-): Record<E, number> {
-  const b = vals.reduce((prev, curr) => {
-    if (prev[curr]) {
-      return { ...prev, [curr]: prev[curr] + 1 };
+export function countByValue<E>(vals: E[]): Map<E, number> {
+  const m = new Map<E, number>();
+  vals.forEach((v) => {
+    const current = m.get(v);
+    if (current) {
+      m.set(v, current + 1);
     } else {
-      return { ...prev, [curr]: 1 };
+      m.set(v, 1);
     }
-  }, {} as Record<E, number>);
+  });
 
-  return b;
+  return m;
 }
 
 if (import.meta.vitest) {
