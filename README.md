@@ -6,6 +6,16 @@ Inspired by [this page](http://paulbourke.net/fractals/ifs/).
 yarn start
 ```
 
+## Resources
+
+### Colors
+
+ - [Useful color conversion formulas](https://color.lukas-stratmann.com/color-systems/hsl.html)
+
+### Fractals
+
+ - [Intro to fractals](https://users.math.yale.edu/public_html/People/frame/Fractals/Labs/IFSLab/IFSLab.html)
+
 ## Ideas / links
 
 ### Fractal Flame Algorithm
@@ -35,6 +45,10 @@ Or perhaps AssemblyScript? Example [here](https://www.assemblyscript.org/example
 ### Java implementation
 
 [jonas-lj/IFS-Fractals](https://github.com/jonas-lj/IFS-Fractals)
+
+### Fracal Exercises
+
+ - [Identify the IFS from the fractal](https://users.math.yale.edu/public_html/People/frame/Fractals/Labs/IFSLab/IFSLab.html)
 
 ### TODOS
 
