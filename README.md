@@ -31,6 +31,7 @@ Get test coverage by adding `--coverage`.
 ### Fractals
 
  - [Intro to fractals](https://users.math.yale.edu/public_html/People/frame/Fractals/Labs/IFSLab/IFSLab.html)
+ - [Image Based Rendering of Iterated Function Systems](https://www.uni-konstanz.de/mmsp/pubsys/publishedFiles/WiSa04.pdf) Another algorithm to generate IFS's. The references also refers to more efficient methods to generate IFS. See [here](https://www.win.tue.nl/~vanwijk/ibifs/) for more.
 
 ## Ideas / links
 

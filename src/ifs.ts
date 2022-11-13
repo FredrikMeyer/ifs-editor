@@ -76,8 +76,6 @@ export class IFSIterator {
     const nx = a * x + b * y + e;
     const ny = c * x + d * y + f;
 
-    // const newColor = brightenColor(this.equation.parts[idx].color, iterationN);
-
     return {
       x: nx,
       y: ny,
