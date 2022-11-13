@@ -97,6 +97,7 @@ export class IFSIterator {
     for (let i = 20; i < iterations; i++) {
       res.push(this.iterate(res[res.length - 1]));
     }
+
     return res;
   }
 }

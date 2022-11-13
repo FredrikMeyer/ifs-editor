@@ -44,12 +44,14 @@ function computeCanvasSize(width: number, height: number) {
 interface CanvasProps {
   startingView: View;
   showAxes: boolean;
+  useColors: boolean;
   points: ColoredPoint[];
 }
 
 export default function Canvas({
   points,
   showAxes,
+  useColors,
   startingView,
 }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -73,13 +75,13 @@ export default function Canvas({
     if (canvas) {
       requestId = window.requestAnimationFrame(() => {
         /* const startTime = performance.now(); */
-        drawer.draw(canvas, points, mousePos, showAxes);
+        drawer.draw(canvas, points, mousePos, showAxes, useColors);
         /* const duration = performance.now() - startTime; */
       });
     }
 
     return () => window.cancelAnimationFrame(requestId || 0);
-  }, [drawer, mousePos, points, showAxes]);
+  }, [drawer, mousePos, points, showAxes, useColors]);
 
   const onCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     const pos = drawer.getCursorPosition(

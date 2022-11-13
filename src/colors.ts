@@ -12,7 +12,14 @@ export interface HSVColor {
   value: number;
 }
 
-export type Color = RGBColor | HSVColor;
+export interface HSLColor {
+  type: "HSL";
+  hue: number;
+  saturation: number;
+  lightness: number;
+}
+
+export type Color = RGBColor | HSVColor | HSLColor;
 export const RED: Color = {
   type: "RGB",
   red: 255,
@@ -41,7 +48,56 @@ export const BROWN: Color = {
   blue: 40,
 };
 
-function toHSV(color: RGBColor): HSVColor {
+export const WHITE: Color = {
+  type: "RGB",
+  red: 255,
+  green: 255,
+  blue: 255,
+};
+
+function getHue({
+  red,
+  green,
+  blue,
+  chroma,
+  value,
+}: {
+  red: number;
+  green: number;
+  blue: number;
+  chroma: number;
+  value: number;
+}): number {
+  if (chroma === 0) {
+    return 0;
+  }
+
+  if (value === red) {
+    return (60 * (green - blue)) / chroma;
+  }
+
+  if (value === green) {
+    return 60 * (2 + (blue - red) / chroma);
+  }
+
+  // value === blueScaled in this case
+  return 60 * (4 + (red - green) / chroma);
+}
+
+export function toHSV(color: Color): HSVColor {
+  if (color.type === "HSV") return color;
+
+  if (color.type === "HSL") {
+    const { hue, saturation, lightness } = color;
+    const value = lightness + saturation * Math.min(lightness, 1 - lightness);
+    return {
+      type: "HSV",
+      hue,
+      value,
+      saturation: value === 0 ? 0 : 2 * (1 - lightness / value),
+    };
+  }
+
   const { red, green, blue } = color;
   const { redScaled, greenScaled, blueScaled } = {
     redScaled: red / 255,
@@ -51,48 +107,106 @@ function toHSV(color: RGBColor): HSVColor {
   const xMax = Math.max(redScaled, greenScaled, blueScaled);
   const xMin = Math.min(redScaled, greenScaled, blueScaled);
 
+  const V = xMax;
   const chroma = xMax - xMin;
 
-  const lightness = 0.5 * (xMax + xMax);
+  const hue = getHue({
+    red: redScaled,
+    green: greenScaled,
+    blue: blueScaled,
+    chroma,
+    value: V,
+  });
 
-  const hue = (() => {
-    if (chroma === 0) {
-      return 0;
-    }
-
-    if (xMax === redScaled) {
-      return (60 * (greenScaled - blueScaled)) / chroma;
-    }
-
-    if (xMax === greenScaled) {
-      return 60 * (2 + (blueScaled - redScaled) / chroma);
-    }
-
-    // xMax === blueScaled in this case
-    return 60 * (4 + (redScaled - greenScaled) / chroma);
-  })();
-
-  const sv = xMax === 0 ? 0 : chroma / xMax;
-
-  return { type: "HSV", hue, saturation: sv, value: lightness };
+  const sv = V === 0 ? 0 : chroma / V;
+  return { type: "HSV", hue, saturation: sv, value: V };
 }
 
-export function toRGB(color: HSVColor): RGBColor {
-  const { hue, saturation, value } = color;
+export function toHSL(color: Color): HSLColor {
+  if (color.type === "HSL") return color;
+
+  if (color.type === "HSV") {
+    const { hue, saturation, value } = color;
+    const lightness = value * (1 - saturation / 2);
+    return {
+      type: "HSL",
+      hue,
+      lightness,
+      saturation:
+        lightness === 0 || lightness === 1
+          ? 0
+          : (value - lightness) / Math.min(lightness, 1 - lightness),
+    };
+  }
+  const { red, green, blue } = color;
+
+  const { redScaled, greenScaled, blueScaled } = {
+    redScaled: red / 255,
+    greenScaled: green / 255,
+    blueScaled: blue / 255,
+  };
+  const xMax = Math.max(redScaled, greenScaled, blueScaled);
+  const xMin = Math.min(redScaled, greenScaled, blueScaled);
+
+  const V = xMax;
+  const chroma = xMax - xMin;
+
+  const lightness = 0.5 * (xMax + xMin);
+
+  const hue = getHue({
+    red: redScaled,
+    blue: blueScaled,
+    green: greenScaled,
+    chroma,
+    value: V,
+  });
+
+  const sl =
+    lightness === 0 || lightness === 1
+      ? 0
+      : (2 * (V - lightness)) / (1 - Math.abs(2 * lightness - 1));
+  return { type: "HSL", hue, saturation: sl, lightness };
+}
+
+export function toRGB(color: Color): RGBColor {
+  if (color.type === "RGB") return color;
+
+  if (color.type === "HSV") {
+    const { hue, saturation, value } = color;
+
+    const f = (n: number) => {
+      const k = (n + hue / 60) % 6;
+      return value - value * saturation * Math.max(0, Math.min(k, 4 - k, 1));
+    };
+
+    const { red, green, blue } = {
+      red: f(5) * 255,
+      green: f(3) * 255,
+      blue: f(1) * 255,
+    };
+    return {
+      type: "RGB",
+      red,
+      green,
+      blue,
+    };
+  }
+
+  // We're dealing with HSL
+  const { hue, saturation, lightness } = color;
 
   const f = (n: number) => {
-    const k = (n + hue / 60) % 6;
-    return (
-      (value - value * saturation * Math.max(0, Math.min(k, 4 - k, 1))) * 255
-    );
+    const k = (n + hue / 30) % 12;
+    const a = saturation * Math.min(lightness, 1 - lightness);
+
+    return lightness - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
   };
 
-  const { red, green, blue } = { red: f(5), green: f(3), blue: f(1) };
   return {
     type: "RGB",
-    red,
-    green,
-    blue,
+    red: f(0) * 255,
+    green: f(8) * 255,
+    blue: f(4) * 255,
   };
 }
 
@@ -154,11 +268,90 @@ if (import.meta.vitest) {
     });
   });
 
-  it("converts hsv to rgb", () => {
+  it("converts rgb to hsv", () => {
     const brownHSV = toHSV(BROWN);
 
     const res = toRGB(brownHSV);
 
     expect(res).toStrictEqual(BROWN);
+
+    expect(res.type).toEqual("RGB");
+  });
+
+  it("converts hsl to rgb and back", () => {
+    const hsl: HSLColor = {
+      type: "HSL",
+      hue: 45,
+      saturation: 1,
+      lightness: 0.5,
+    };
+
+    const rgb = toRGB(hsl);
+    const res = toHSL(rgb);
+
+    expect(res).toStrictEqual(hsl);
+  });
+
+  it("max lightness HSL is pure white", () => {
+    const hsl: HSLColor = {
+      type: "HSL",
+      hue: 44,
+      saturation: 0.8,
+      lightness: 1,
+    };
+
+    const rgb = toRGB(hsl);
+
+    expect(rgb).toEqual(WHITE);
+  });
+
+  it("max value HSV is pure red", () => {
+    const hsl: HSVColor = {
+      type: "HSV",
+      hue: 0,
+      saturation: 1,
+      value: 1,
+    };
+
+    const rgb = toRGB(hsl);
+
+    expect(rgb).toEqual(RED);
+  });
+
+  it("converts rgb to hsl and back", () => {
+    const brownHSL = toHSL(BROWN);
+
+    const res = toRGB(brownHSL);
+
+    const { red, green, blue } = res;
+    expect(red).toBeCloseTo(BROWN.red);
+    expect(green).toBeCloseTo(BROWN.green);
+    expect(blue).toBeCloseTo(BROWN.blue);
+
+    expect(res.type).toEqual("RGB");
+  });
+
+  it("converts hsl to hsv and back", () => {
+    const hsl: HSLColor = {
+      type: "HSL",
+      hue: 100,
+      saturation: 0.8,
+      lightness: 0.5,
+    };
+
+    const hsv = toHSV(hsl);
+    const res = toHSL(hsv);
+    expect(res).toStrictEqual(hsl);
+  });
+
+  it("converts in a cycle", () => {
+    const brownHSV = toHSV(BROWN);
+    const hsl = toHSL(brownHSV);
+    const rgb = toRGB(hsl);
+
+    const { red, green, blue } = rgb;
+    expect(red).toBeCloseTo(BROWN.red);
+    expect(green).toBeCloseTo(BROWN.green);
+    expect(blue).toBeCloseTo(BROWN.blue);
   });
 }

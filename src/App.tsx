@@ -63,6 +63,7 @@ function App() {
   }, [currentEquation, iterations]);
 
   const [showAxes, setShowAxes] = React.useState(true);
+  const [colorPoints, setColorPoints] = React.useState(true);
 
   return (
     <>
@@ -77,6 +78,7 @@ function App() {
             <Canvas
               points={points}
               startingView={currentEquation.defaultView}
+              useColors={colorPoints}
               showAxes={showAxes}
             ></Canvas>
           </Grid>
@@ -99,7 +101,7 @@ function App() {
                 onChange={onIterationsSliderChange}
                 aria-labelledby="iterations-slider"
                 min={50_000}
-                max={1_000_000}
+                max={5_000_000}
                 step={10_000}
               />
               Iterations: {iterations}
@@ -139,12 +141,19 @@ function App() {
                   <Checkbox
                     checked={showAxes}
                     onChange={(event) => setShowAxes(event.target.checked)}
-                    name="checkedA"
                   />
                 }
                 label="Show axes"
               />
-
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={colorPoints}
+                    onChange={(event) => setColorPoints(event.target.checked)}
+                  />
+                }
+                label="Color points"
+              />
               <ProbabilitiesSlider
                 parts={currentEquation.parts}
                 onUpdateProbs={onUpdateProbs}
