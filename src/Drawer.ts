@@ -52,6 +52,11 @@ function makeHistogram(
   points.forEach(({ x, y }) => {
     const [a, b] = toCanvasCoords(drawerOptions, view, { x, y });
 
+    if (a < 0 || b < 0 || a > drawerOptions.width || b > drawerOptions.height) {
+      // We are outside the canvas, so can ignore
+      return;
+    }
+
     const ind = canvasCoordsToImageDataIndex(drawerOptions.width, a, b);
     const curr = histogram[ind];
 
@@ -99,6 +104,11 @@ function getTransformedColors(
     const hslColor = color.type !== "HSL" ? toHSL(color) : color;
 
     const [x, y] = toCanvasCoords(canvasOptions, view, c);
+
+    if (x < 0 || y < 0 || x > canvasOptions.width || y > canvasOptions.height) {
+      return null;
+    }
+
     const brightness =
       brightnesses[canvasCoordsToImageDataIndex(canvasOptions.width, x, y)];
     const newColor = toRGB({
@@ -166,12 +176,15 @@ export class Drawer {
       }
       const index = canvasCoordsToImageDataIndex(WIDTH, x, y);
 
-      const color = transformedColoredPoints[i].color;
+      const currentPoint = transformedColoredPoints[i];
+      if (currentPoint) {
+        const color = currentPoint.color;
 
-      // See https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
-      // Might give wrong result if run on a big endian processor
-      data[index] =
-        (255 << 24) | (color.blue << 16) | (color.green << 8) | color.red;
+        // See https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
+        // Might give wrong result if run on a big endian processor
+        data[index] =
+          (255 << 24) | (color.blue << 16) | (color.green << 8) | color.red;
+      }
     }
     canvasData.data.set(buf8);
     ctx.putImageData(canvasData, 0, 0);
