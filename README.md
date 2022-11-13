@@ -2,9 +2,25 @@
 
 Inspired by [this page](http://paulbourke.net/fractals/ifs/).
 
+Try it [here](https://blog.fredrikmeyer.net/ifs-editor/).
+
+![Illustration of IFS.](./ifs.png)
+
+## Usage
+
+Run locally (a browser opens on `http://localhost:5173/ifs-editor/`):
+
 ```
 yarn start
 ```
+
+Run tests:
+
+```
+yarn test
+```
+
+Get test coverage by adding `--coverage`.
 
 ## Resources
 
