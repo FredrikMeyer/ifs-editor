@@ -773,10 +773,10 @@
     c8 "^7.12.0"
     vitest "0.25.2"
 
-"@vitest/ui@^0.25.1":
-  version "0.25.1"
-  resolved "https://registry.yarnpkg.com/@vitest/ui/-/ui-0.25.1.tgz#09f55e133b2865d0751d0fd75f1bcbcbb60f7d24"
-  integrity sha512-VjzyfLjNS5Zc7XCCFJW3cM2iVW305D65NG0PIWefA4A8mwOH/QJJ4nFj/4cwXzwL0/VT3/ppvpv3UDNZoh/YOQ==
+"@vitest/ui@^0.25.2":
+  version "0.25.2"
+  resolved "https://registry.yarnpkg.com/@vitest/ui/-/ui-0.25.2.tgz#98e1191b791db94271eb6b9a8e843caded0802be"
+  integrity sha512-/pUR88zjiF/5qnzb8Ou9i3+NDgteMcqk7G8VZox/qzcs7Z06dLpNzAxANOANP9m8U/yrJtPNjQqeuMI26HbWwA==
   dependencies:
     sirv "^2.0.2"
 
