@@ -14,7 +14,7 @@ import { randomColor } from "./colors";
 import Canvas from "./Canvas";
 import Equation from "./Equations";
 import PrettyPrinter from "./PrettyPrinter";
-import { IFSIterator, randomEquation, randomIFSPart } from "./ifs";
+import { IFSIterator, randomEquation, randomIFSPart, variations } from "./ifs";
 import { examples, exampleNames, Examples } from "./ifsExamples";
 
 function App() {
@@ -29,6 +29,25 @@ function App() {
   const handleSelectEquation = (event: SelectChangeEvent<Examples>) => {
     updateEquation(examples[event.target.value as Examples]);
     setEquation(event.target.value as Examples);
+  };
+
+  const [variation, setVariation] = React.useState<
+    keyof typeof variations | "None"
+  >("None");
+  const handleSelectVariation = (
+    event: SelectChangeEvent<keyof typeof variations | "None">
+  ) => {
+    const val = event.target.value as keyof typeof variations | "None";
+    updateEquation((eq) => {
+      if (val === "None") {
+        return { ...eq, variation: undefined };
+      }
+      return {
+        ...eq,
+        variation: variations[val],
+      };
+    });
+    setVariation(val);
   };
 
   const generateRandom = () => updateEquation(randomEquation());
@@ -114,6 +133,7 @@ function App() {
                   </InputLabel>
                   <Select
                     className="equation-selector"
+                    labelId="predef-label"
                     value={equation}
                     onChange={handleSelectEquation}
                   >
@@ -131,6 +151,32 @@ function App() {
                     <ControlPointIcon className="addIcon" />
                   </IconButton>
                 </div>
+              </div>
+              <div>
+                <InputLabel shrink id="variation-label">
+                  Variation
+                </InputLabel>
+                <Select
+                  value={variation}
+                  onChange={handleSelectVariation}
+                  labelId="variation-label"
+                  renderValue={(v) => (
+                    <span style={{ textTransform: "capitalize" }}>{v}</span>
+                  )}
+                >
+                  <MenuItem value={"None"}>None</MenuItem>
+                  {Object.keys(variations).map((v) => {
+                    return (
+                      <MenuItem
+                        value={v}
+                        key={v}
+                        style={{ textTransform: "capitalize" }}
+                      >
+                        {v}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
               </div>
               <Equation
                 equation={currentEquation}
