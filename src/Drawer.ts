@@ -116,7 +116,7 @@ function getTransformedColors(
       lightness: brightness,
     });
 
-    return { ...c, color: newColor };
+    return { x, y, color: newColor };
   });
 
   return transformedColors;
@@ -163,29 +163,24 @@ export class Drawer {
       ? getTransformedColors(coloredPoints, this.canvasOptions, this.view)
       : coloredPoints.map((p) => {
           const { color } = p;
-          return { ...p, color: color.type === "RGB" ? color : toRGB(color) };
+          const [x, y] = toCanvasCoords(this.canvasOptions, this.view, p);
+          return { x, y, color: color.type === "RGB" ? color : toRGB(color) };
         });
 
-    // TODO only loop over indices that we should draw on (make histogram return them)
-    for (let i = 0; i < coloredPoints.length; i++) {
-      const pt = coloredPoints[i];
-      const [x, y] = toCanvasCoords(this.canvasOptions, this.view, pt); // TODO: test om performance er raskere om dette flyttes ut
-
-      if (x > WIDTH || y > HEIGHT || x < 0 || y < 0) {
-        continue;
+    transformedColoredPoints.forEach((pt) => {
+      if (pt === null) {
+        return;
       }
+
+      const { x, y, color } = pt;
       const index = canvasCoordsToImageDataIndex(WIDTH, x, y);
 
-      const currentPoint = transformedColoredPoints[i];
-      if (currentPoint) {
-        const color = currentPoint.color;
+      // See https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
+      // Might give wrong result if run on a big endian processor
+      data[index] =
+        (255 << 24) | (color.blue << 16) | (color.green << 8) | color.red;
+    });
 
-        // See https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
-        // Might give wrong result if run on a big endian processor
-        data[index] =
-          (255 << 24) | (color.blue << 16) | (color.green << 8) | color.red;
-      }
-    }
     canvasData.data.set(buf8);
     ctx.putImageData(canvasData, 0, 0);
 

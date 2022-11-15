@@ -19,7 +19,7 @@ import { examples, exampleNames, Examples } from "./ifsExamples";
 
 function App() {
   const [currentEquation, updateEquation] = React.useState(examples.eq1);
-  const [iterations, setIterations] = React.useState(100000);
+  const [iterations, setIterations] = React.useState(10_000_00);
 
   const onIterationsSliderChange = (_: Event, val: number | number[]) => {
     setIterations(val as number);
