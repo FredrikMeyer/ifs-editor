@@ -17,6 +17,8 @@ import PrettyPrinter from "./PrettyPrinter";
 import { IFSIterator, randomEquation, randomIFSPart, variations } from "./ifs";
 import { examples, exampleNames, Examples } from "./ifsExamples";
 
+type Variations = keyof typeof variations;
+
 function App() {
   const [currentEquation, updateEquation] = React.useState(examples.eq1);
   const [iterations, setIterations] = React.useState(10_000_00);
@@ -25,15 +27,19 @@ function App() {
     setIterations(val as number);
   };
 
-  const [equation, setEquation] = React.useState<Examples>(exampleNames[0]);
+  const [equationChoice, setEquationChoice] = React.useState<{
+    equation: Examples;
+    variation: Variations | "None";
+  }>({ equation: exampleNames[0], variation: "None" });
+
   const handleSelectEquation = (event: SelectChangeEvent<Examples>) => {
     updateEquation(examples[event.target.value as Examples]);
-    setEquation(event.target.value as Examples);
+    setEquationChoice((old) => ({
+      ...old,
+      equation: event.target.value as Examples,
+    }));
   };
 
-  const [variation, setVariation] = React.useState<
-    keyof typeof variations | "None"
-  >("None");
   const handleSelectVariation = (
     event: SelectChangeEvent<keyof typeof variations | "None">
   ) => {
@@ -47,7 +53,8 @@ function App() {
         variation: variations[val],
       };
     });
-    setVariation(val);
+
+    setEquationChoice((old) => ({ ...old, variation: val }));
   };
 
   const generateRandom = () => updateEquation(randomEquation());
@@ -134,7 +141,7 @@ function App() {
                   <Select
                     className="equation-selector"
                     labelId="predef-label"
-                    value={equation}
+                    value={equationChoice.equation}
                     onChange={handleSelectEquation}
                   >
                     <MenuItem value={"eq1"}>Mandelbrot-like</MenuItem>
@@ -157,7 +164,7 @@ function App() {
                   Variation
                 </InputLabel>
                 <Select
-                  value={variation}
+                  value={equationChoice.variation}
                   onChange={handleSelectVariation}
                   labelId="variation-label"
                   renderValue={(v) => (
