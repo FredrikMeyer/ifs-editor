@@ -20,35 +20,36 @@ export interface HSLColor {
 }
 
 export type Color = RGBColor | HSVColor | HSLColor;
-export const RED: Color = {
+
+export const RED: RGBColor = {
   type: "RGB",
   red: 255,
   green: 0,
   blue: 0,
 };
 
-export const BLUE: Color = {
+export const BLUE: RGBColor = {
   type: "RGB",
   red: 0,
   green: 0,
   blue: 255,
 };
 
-export const GREEN: Color = {
+export const GREEN: RGBColor = {
   type: "RGB",
   red: 0,
   green: 100,
   blue: 0,
 };
 
-export const BROWN: Color = {
+export const BROWN: RGBColor = {
   type: "RGB",
   red: 150,
   green: 100,
   blue: 40,
 };
 
-export const WHITE: Color = {
+export const WHITE: RGBColor = {
   type: "RGB",
   red: 255,
   green: 255,

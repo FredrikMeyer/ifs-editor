@@ -1,5 +1,5 @@
 import { MouseEvent } from "react";
-import { toRGB, toHSL } from "./colors";
+import { toRGB, toHSL, HSLColor, Color } from "./colors";
 import { View } from "./ifs";
 import { ColoredPoint, mapFromInterval, Point } from "./util";
 
@@ -88,36 +88,52 @@ function toCanvasCoords(
   ];
 }
 
-function getTransformedColors(
-  coloredPoints: ColoredPoint[],
-  canvasOptions: DrawerOptions,
-  view: View
-) {
-  const { max, histogram } = makeHistogram(canvasOptions, view, coloredPoints);
-
-  const brightnesses = histogram
+function computeBrightnesses(histogram: number[], max: number) {
+  return histogram
     .map((v) => Math.log(v) / Math.log(max))
     .map((v) => mapFromInterval(0, 1, 0.9, 0.5, v));
+}
 
-  const transformedColors = coloredPoints.map((c) => {
-    const { color } = c;
-    const hslColor = color.type !== "HSL" ? toHSL(color) : color;
+function getTransformedColors(
+  coloredPoints: ColoredPoint<Color>[],
+  canvasOptions: DrawerOptions,
+  view: View
+): ColoredPoint<HSLColor>[] {
+  const { max, histogram } = makeHistogram(canvasOptions, view, coloredPoints);
 
-    const [x, y] = toCanvasCoords(canvasOptions, view, c);
+  const brightnesses = computeBrightnesses(histogram, max);
 
-    if (x < 0 || y < 0 || x > canvasOptions.width || y > canvasOptions.height) {
-      return null;
-    }
+  const transformedColors = coloredPoints
+    .map((c) => {
+      const [x, y] = toCanvasCoords(canvasOptions, view, c);
+      return { x, y, color: c.color };
+    })
+    .filter((c) => {
+      const { x, y } = c;
 
-    const brightness =
-      brightnesses[canvasCoordsToImageDataIndex(canvasOptions.width, x, y)];
-    const newColor = toRGB({
-      ...hslColor,
-      lightness: brightness,
+      if (
+        x < 0 ||
+        y < 0 ||
+        x > canvasOptions.width ||
+        y > canvasOptions.height
+      ) {
+        return false;
+      }
+      return true;
+    })
+    .map((c) => {
+      const { color, x, y } = c;
+      const hslColor = color.type !== "HSL" ? toHSL(color) : color;
+
+      const brightness =
+        brightnesses[canvasCoordsToImageDataIndex(canvasOptions.width, x, y)];
+      const newColor: HSLColor = {
+        ...hslColor,
+        lightness: brightness,
+      };
+
+      return { x, y, color: newColor };
     });
-
-    return { x, y, color: newColor };
-  });
 
   return transformedColors;
 }
@@ -133,7 +149,7 @@ export class Drawer {
 
   public draw(
     canvas: HTMLCanvasElement,
-    coloredPoints: ColoredPoint[],
+    coloredPoints: ColoredPoint<Color>[],
     mousePos: [number, number],
     showAxes: boolean,
     colorPoints: boolean
@@ -168,17 +184,17 @@ export class Drawer {
         });
 
     transformedColoredPoints.forEach((pt) => {
-      if (pt === null) {
-        return;
-      }
+      // if (pt === null) {
+      //   return;
+      // }
 
       const { x, y, color } = pt;
       const index = canvasCoordsToImageDataIndex(WIDTH, x, y);
+      const { blue, green, red } = toRGB(color);
 
       // See https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
       // Might give wrong result if run on a big endian processor
-      data[index] =
-        (255 << 24) | (color.blue << 16) | (color.green << 8) | color.red;
+      data[index] = (255 << 24) | (blue << 16) | (green << 8) | red;
     });
 
     canvasData.data.set(buf8);

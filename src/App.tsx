@@ -21,7 +21,7 @@ type Variations = keyof typeof variations;
 
 function App() {
   const [currentEquation, updateEquation] = React.useState(examples.eq1);
-  const [iterations, setIterations] = React.useState(10_000_00);
+  const [iterations, setIterations] = React.useState(100_000);
 
   const onIterationsSliderChange = (_: Event, val: number | number[]) => {
     setIterations(val as number);
@@ -31,6 +31,8 @@ function App() {
     equation: Examples;
     variation: Variations | "None";
   }>({ equation: exampleNames[0], variation: "None" });
+
+  console.log(equationChoice);
 
   const handleSelectEquation = (event: SelectChangeEvent<Examples>) => {
     updateEquation(examples[event.target.value as Examples]);
@@ -89,7 +91,7 @@ function App() {
   }, [currentEquation, iterations]);
 
   const [showAxes, setShowAxes] = React.useState(true);
-  const [colorPoints, setColorPoints] = React.useState(true);
+  const [colorPoints, setColorPoints] = React.useState(false);
 
   return (
     <>
@@ -127,7 +129,7 @@ function App() {
                 onChange={onIterationsSliderChange}
                 aria-labelledby="iterations-slider"
                 min={50_000}
-                max={5_000_000}
+                max={500_000}
                 step={10_000}
               />
               Iterations: {iterations}

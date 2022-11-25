@@ -97,7 +97,7 @@ export class IFSIterator {
     this.probabilites = equation.parts.map((p) => p.probability);
   }
 
-  private iterate(prev: ColoredPoint): ColoredPoint {
+  private iterate(prev: ColoredPoint<Color>): ColoredPoint<Color> {
     const { x, y } = prev;
 
     const r = Math.random();
@@ -123,8 +123,8 @@ export class IFSIterator {
     };
   }
 
-  public getPoints(iterations: number): ColoredPoint[] {
-    const res: ColoredPoint[] = [
+  public getPoints(iterations: number): ColoredPoint<Color>[] {
+    const res: ColoredPoint<Color>[] = [
       {
         x: Math.random(),
         y: Math.random(),

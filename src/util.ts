@@ -7,7 +7,7 @@ export type Point = {
   y: number;
 };
 
-export type ColoredPoint = Point & { color: Color };
+export type ColoredPoint<C extends Color> = Point & { color: C };
 
 export function probToIndex(probs: number[], prob: number) {
   let c = 0;

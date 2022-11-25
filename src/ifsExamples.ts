@@ -31,7 +31,6 @@ export const examples: Record<Examples, IFSEquation> = {
       yMin: -1.41,
       yMax: 0.39,
     },
-    variation: spherical,
     parts: [
       {
         probability: 0.5,

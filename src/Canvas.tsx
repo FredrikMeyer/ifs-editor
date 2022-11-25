@@ -4,6 +4,7 @@ import { ColoredPoint } from "./util";
 import { View } from "./ifs";
 import { Button, Slider, Stack, Box, Typography, Grid } from "@mui/material";
 import { Drawer } from "./Drawer";
+import { Color } from "./colors";
 
 function useWindowSize() {
   // From https://usehooks.com/useWindowSize/
@@ -45,7 +46,7 @@ interface CanvasProps {
   startingView: View;
   showAxes: boolean;
   useColors: boolean;
-  points: ColoredPoint[];
+  points: ColoredPoint<Color>[];
 }
 
 export default function Canvas({
