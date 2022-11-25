@@ -42,6 +42,20 @@ function computeCanvasSize(width: number, height: number) {
   return { width: common, height: common };
 }
 
+function useDrawer(view: View) {
+  const { width, height } = useWindowSize();
+  const canvasSize = React.useMemo(
+    () => computeCanvasSize(width, height),
+    [height, width]
+  );
+  const drawer = React.useMemo(
+    () => new Drawer(canvasSize, view),
+    [view, canvasSize]
+  );
+
+  return drawer;
+}
+
 interface CanvasProps {
   startingView: View;
   showAxes: boolean;
@@ -61,12 +75,8 @@ export default function Canvas({
   React.useEffect(() => {
     setView(startingView);
   }, [startingView]);
-  const { width, height } = useWindowSize();
 
-  const drawer = React.useMemo(
-    () => new Drawer(computeCanvasSize(width, height), view),
-    [view, width, height]
-  );
+  const drawer = useDrawer(view);
 
   const [mousePos, setMousePos] = React.useState<[number, number]>([0, 0]);
 

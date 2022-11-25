@@ -14,13 +14,18 @@ import { randomColor } from "./colors";
 import Canvas from "./Canvas";
 import Equation from "./Equations";
 import PrettyPrinter from "./PrettyPrinter";
-import { IFSIterator, randomEquation, randomIFSPart, variations } from "./ifs";
+import {
+  IFSEquation,
+  IFSIterator,
+  randomEquation,
+  randomIFSPart,
+  variations,
+} from "./ifs";
 import { examples, exampleNames, Examples } from "./ifsExamples";
 
 type Variations = keyof typeof variations;
 
 function App() {
-  const [currentEquation, updateEquation] = React.useState(examples.eq1);
   const [iterations, setIterations] = React.useState(100_000);
 
   const onIterationsSliderChange = (_: Event, val: number | number[]) => {
@@ -28,15 +33,20 @@ function App() {
   };
 
   const [equationChoice, setEquationChoice] = React.useState<{
-    equation: Examples;
+    equationName: Examples;
     variation: Variations | "None";
-  }>({ equation: exampleNames[0], variation: "None" });
+    equation: IFSEquation;
+  }>({
+    equationName: exampleNames[0],
+    variation: "None",
+    equation: examples.eq1,
+  });
 
   const handleSelectEquation = (event: SelectChangeEvent<Examples>) => {
-    updateEquation(examples[event.target.value as Examples]);
     setEquationChoice((old) => ({
       ...old,
-      equation: event.target.value as Examples,
+      equationName: event.target.value as Examples,
+      equation: examples[event.target.value as Examples],
     }));
   };
 
@@ -44,49 +54,53 @@ function App() {
     event: SelectChangeEvent<keyof typeof variations | "None">
   ) => {
     const val = event.target.value as keyof typeof variations | "None";
-    updateEquation((eq) => {
-      if (val === "None") {
-        return { ...eq, variation: undefined };
-      }
-      return {
-        ...eq,
-        variation: variations[val],
-      };
-    });
 
-    setEquationChoice((old) => ({ ...old, variation: val }));
+    setEquationChoice((old) => ({
+      ...old,
+      variation: val,
+      equation:
+        val === "None"
+          ? { ...old.equation, variation: undefined }
+          : { ...old.equation, variation: variations[val] },
+    }));
   };
 
-  const generateRandom = () => updateEquation(randomEquation());
+  const generateRandom = () =>
+    setEquationChoice((old) => ({ ...old, equation: randomEquation() }));
 
   const onClickAdd = () => {
     const color = randomColor();
-    const oldParts = currentEquation.parts;
-    const oldProb = oldParts[currentEquation.parts.length - 1].probability;
+    const oldParts = equationChoice.equation.parts;
+    const oldProb =
+      oldParts[equationChoice.equation.parts.length - 1].probability;
     const newProb = oldProb * 0.5;
     const newPart = randomIFSPart(color, newProb);
     oldParts[oldParts.length - 1].probability = newProb;
-    updateEquation({
-      ...currentEquation,
-      parts: [...currentEquation.parts, newPart],
-    });
+    setEquationChoice((old) => ({
+      ...old,
+      equation: {
+        ...old.equation,
+        parts: [...old.equation.parts, newPart],
+      },
+    }));
   };
 
   const onUpdateProbs = (newProbs: number[]) => {
-    const newEquation = currentEquation;
+    const newEquation = { ...equationChoice.equation };
     newProbs.forEach((p, idx) => {
       newEquation.parts[idx].probability = p;
     });
 
-    updateEquation({
-      ...newEquation,
-    });
+    setEquationChoice((old) => ({
+      ...old,
+      equation: newEquation,
+    }));
   };
 
   const points = React.useMemo(() => {
-    const iterator = new IFSIterator(currentEquation);
+    const iterator = new IFSIterator(equationChoice.equation);
     return iterator.getPoints(iterations);
-  }, [currentEquation, iterations]);
+  }, [equationChoice.equation, iterations]);
 
   const [showAxes, setShowAxes] = React.useState(true);
   const [colorPoints, setColorPoints] = React.useState(false);
@@ -103,7 +117,7 @@ function App() {
           <Grid item xs="auto">
             <Canvas
               points={points}
-              startingView={currentEquation.defaultView}
+              startingView={equationChoice.equation.defaultView}
               useColors={colorPoints}
               showAxes={showAxes}
             ></Canvas>
@@ -141,7 +155,7 @@ function App() {
                   <Select
                     className="equation-selector"
                     labelId="predef-label"
-                    value={equationChoice.equation}
+                    value={equationChoice.equationName}
                     onChange={handleSelectEquation}
                   >
                     <MenuItem value={"eq1"}>Mandelbrot-like</MenuItem>
@@ -186,8 +200,10 @@ function App() {
                 </Select>
               </div>
               <Equation
-                equation={currentEquation}
-                onUpdateEquation={updateEquation}
+                equation={equationChoice.equation}
+                onUpdateEquation={(newEq: IFSEquation) =>
+                  setEquationChoice((old) => ({ ...old, equation: newEq }))
+                }
               />
               <FormControlLabel
                 control={
@@ -208,7 +224,7 @@ function App() {
                 label="Color points"
               />
               <ProbabilitiesSlider
-                parts={currentEquation.parts}
+                parts={equationChoice.equation.parts}
                 onUpdateProbs={onUpdateProbs}
               />
 
@@ -216,7 +232,7 @@ function App() {
                 Generate random equation
               </Button>
             </div>
-            <PrettyPrinter equation={currentEquation} />
+            <PrettyPrinter equation={equationChoice.equation} />
           </Grid>
         </Grid>
       </main>
