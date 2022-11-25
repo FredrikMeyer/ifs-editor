@@ -1,5 +1,5 @@
 import { MouseEvent } from "react";
-import { toRGB, toHSL, HSLColor, Color } from "./colors";
+import { toRGB, toHSL, HSLColor, Color, RGBColor } from "./colors";
 import { View } from "./ifs";
 import { ColoredPoint, mapFromInterval, Point } from "./util";
 
@@ -42,7 +42,6 @@ function imageDataIndexToCoords(
 
 function makeHistogram(
   drawerOptions: DrawerOptions,
-  view: View,
   points: Point[]
 ): { histogram: number[]; max: number } {
   const histogram = new Array<number>(
@@ -50,14 +49,7 @@ function makeHistogram(
   );
   let max = 0;
   points.forEach(({ x, y }) => {
-    const [a, b] = toCanvasCoords(drawerOptions, view, { x, y });
-
-    if (a < 0 || b < 0 || a > drawerOptions.width || b > drawerOptions.height) {
-      // We are outside the canvas, so can ignore
-      return;
-    }
-
-    const ind = canvasCoordsToImageDataIndex(drawerOptions.width, a, b);
+    const ind = canvasCoordsToImageDataIndex(drawerOptions.width, x, y);
     const curr = histogram[ind];
 
     if (curr > 0) {
@@ -96,46 +88,36 @@ function computeBrightnesses(histogram: number[], max: number) {
 
 function getTransformedColors(
   coloredPoints: ColoredPoint<Color>[],
-  canvasOptions: DrawerOptions,
-  view: View
+  canvasOptions: DrawerOptions
 ): ColoredPoint<HSLColor>[] {
-  const { max, histogram } = makeHistogram(canvasOptions, view, coloredPoints);
+  const { max, histogram } = makeHistogram(canvasOptions, coloredPoints);
 
   const brightnesses = computeBrightnesses(histogram, max);
 
-  const transformedColors = coloredPoints
-    .map((c) => {
-      const [x, y] = toCanvasCoords(canvasOptions, view, c);
-      return { x, y, color: c.color };
-    })
-    .filter((c) => {
-      const { x, y } = c;
+  const transformedColors = coloredPoints.map((c) => {
+    const { color, x, y } = c;
+    const hslColor = color.type !== "HSL" ? toHSL(color) : color;
 
-      if (
-        x < 0 ||
-        y < 0 ||
-        x > canvasOptions.width ||
-        y > canvasOptions.height
-      ) {
-        return false;
-      }
-      return true;
-    })
-    .map((c) => {
-      const { color, x, y } = c;
-      const hslColor = color.type !== "HSL" ? toHSL(color) : color;
+    const brightness =
+      brightnesses[canvasCoordsToImageDataIndex(canvasOptions.width, x, y)];
+    const newColor: HSLColor = {
+      ...hslColor,
+      lightness: brightness,
+    };
 
-      const brightness =
-        brightnesses[canvasCoordsToImageDataIndex(canvasOptions.width, x, y)];
-      const newColor: HSLColor = {
-        ...hslColor,
-        lightness: brightness,
-      };
-
-      return { x, y, color: newColor };
-    });
+    return { x, y, color: newColor };
+  });
 
   return transformedColors;
+}
+
+function coloredPointsToRGB(
+  coloredPoints: ColoredPoint<Color>[]
+): ColoredPoint<RGBColor>[] {
+  return coloredPoints.map((c) => ({
+    ...c,
+    color: c.color.type === "RGB" ? c.color : toRGB(c.color),
+  }));
 }
 
 export class Drawer {
@@ -175,22 +157,35 @@ export class Drawer {
     const buf8 = new Uint8ClampedArray(buf);
     const data = new Uint32Array(buf);
 
+    const pointsWithCanvasCoords: ColoredPoint<Color>[] = coloredPoints
+      .map((p) => {
+        const [x, y] = toCanvasCoords(this.canvasOptions, this.view, p);
+        return { x, y, color: p.color };
+      })
+      .filter((c) => {
+        const { x, y } = c;
+
+        if (
+          x < 0 ||
+          y < 0 ||
+          x > this.canvasOptions.width ||
+          y > this.canvasOptions.height
+        ) {
+          return false;
+        }
+        return true;
+      });
+
     const transformedColoredPoints = colorPoints
-      ? getTransformedColors(coloredPoints, this.canvasOptions, this.view)
-      : coloredPoints.map((p) => {
-          const { color } = p;
-          const [x, y] = toCanvasCoords(this.canvasOptions, this.view, p);
-          return { x, y, color: color.type === "RGB" ? color : toRGB(color) };
-        });
+      ? getTransformedColors(pointsWithCanvasCoords, this.canvasOptions)
+      : pointsWithCanvasCoords;
 
-    transformedColoredPoints.forEach((pt) => {
-      // if (pt === null) {
-      //   return;
-      // }
+    const rgbColors = coloredPointsToRGB(transformedColoredPoints);
 
+    rgbColors.forEach((pt) => {
       const { x, y, color } = pt;
       const index = canvasCoordsToImageDataIndex(WIDTH, x, y);
-      const { blue, green, red } = toRGB(color);
+      const { blue, green, red } = color;
 
       // See https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
       // Might give wrong result if run on a big endian processor
@@ -323,20 +318,16 @@ if (import.meta.vitest) {
 
   it("histogram", () => {
     const width = 10;
-    const options = { width: width, height: width };
-    const view = { xMin: -5, xMax: 5, yMax: -5, yMin: -5 };
 
     const points = [13, 6, 6, 6, 5, 23]
       .map((p) => imageDataIndexToCoords(p, width))
-      .map(([x, y]) => toWorldCoords(options, view, { x, y }))
       .map(([a, b]) => ({ x: a, y: b }));
 
-    expect(points[0]).toEqual({ x: -2, y: -5 });
-    expect(points[points.length - 1]).toEqual({ x: -2, y: -5 });
+    expect(points[0]).toEqual({ x: 3, y: 1 });
+    expect(points[points.length - 1]).toEqual({ x: 3, y: 2 });
 
     const { histogram, max } = makeHistogram(
       { width: width, height: width },
-      { xMin: -5, xMax: 5, yMax: -5, yMin: -5 },
       points
     );
 
