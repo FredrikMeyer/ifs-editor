@@ -1,5 +1,5 @@
 import { BLUE, RED, GREEN, BROWN, randomColor } from "./colors";
-import { IFSEquation, Variation } from "./ifs";
+import { IFSEquation } from "./ifs";
 
 const chaosProb = 0.05263157895;
 
@@ -11,17 +11,6 @@ export const exampleNames = [
   "blackSpleenwort",
 ] as const;
 export type Examples = typeof exampleNames[number];
-
-const sinusoidal: Variation = (p) => ({
-  ...p,
-  x: Math.sin(p.x),
-  y: Math.sin(p.y),
-});
-const spherical: Variation = (p) => ({
-  ...p,
-  x: p.x / (p.x * p.x + p.y * p.y),
-  y: p.y / (p.x * p.x + p.y * p.y),
-});
 
 export const examples: Record<Examples, IFSEquation> = {
   eq1: {

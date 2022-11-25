@@ -32,8 +32,6 @@ function App() {
     variation: Variations | "None";
   }>({ equation: exampleNames[0], variation: "None" });
 
-  console.log(equationChoice);
-
   const handleSelectEquation = (event: SelectChangeEvent<Examples>) => {
     updateEquation(examples[event.target.value as Examples]);
     setEquationChoice((old) => ({
