@@ -22,6 +22,19 @@ import {
   variations,
 } from "./ifs";
 import { examples, exampleNames, Examples } from "./ifsExamples";
+import { createEnumParam, useQueryParam, withDefault } from "use-query-params";
+
+const EqParam = withDefault(
+  createEnumParam<Examples>([...exampleNames]),
+  exampleNames[0]
+);
+
+const VariationParam = withDefault(
+  createEnumParam<Variations | "None">(
+    Object.keys(variations) as unknown as Variations[]
+  ),
+  "None"
+);
 
 type Variations = keyof typeof variations;
 
@@ -32,20 +45,23 @@ function App() {
     setIterations(val as number);
   };
 
+  const [equationName, setEquationName] = useQueryParam("eqName", EqParam);
+  const [variation, setVariation] = useQueryParam("variation", VariationParam);
+  const variationNonNull = variation === null ? undefined : variation;
+
   const [equationChoice, setEquationChoice] = React.useState<{
-    equationName: Examples;
-    variation: Variations | "None";
     equation: IFSEquation;
   }>({
-    equationName: exampleNames[0],
-    variation: "None",
-    equation: examples.eq1,
+    equation:
+      variation && variation !== "None"
+        ? { ...examples[equationName], variation: variations[variation] }
+        : examples[equationName],
   });
 
   const handleSelectEquation = (event: SelectChangeEvent<Examples>) => {
+    setEquationName(event.target.value as Examples);
     setEquationChoice((old) => ({
       ...old,
-      equationName: event.target.value as Examples,
       equation: examples[event.target.value as Examples],
     }));
   };
@@ -55,9 +71,9 @@ function App() {
   ) => {
     const val = event.target.value as keyof typeof variations | "None";
 
+    setVariation(val);
     setEquationChoice((old) => ({
       ...old,
-      variation: val,
       equation:
         val === "None"
           ? { ...old.equation, variation: undefined }
@@ -155,7 +171,7 @@ function App() {
                   <Select
                     className="equation-selector"
                     labelId="predef-label"
-                    value={equationChoice.equationName}
+                    value={equationName}
                     onChange={handleSelectEquation}
                   >
                     <MenuItem value={"eq1"}>Mandelbrot-like</MenuItem>
@@ -178,7 +194,7 @@ function App() {
                   Variation
                 </InputLabel>
                 <Select
-                  value={equationChoice.variation}
+                  value={variationNonNull}
                   onChange={handleSelectVariation}
                   labelId="variation-label"
                   renderValue={(v) => (

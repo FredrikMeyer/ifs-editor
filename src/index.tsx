@@ -4,6 +4,9 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import "./style.css";
 import App from "./App";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { QueryParamProvider } from "use-query-params";
+import { ReactRouter6Adapter } from "use-query-params/adapters/react-router-6";
 
 const theme = createTheme({
   components: {
@@ -25,7 +28,13 @@ if (mountNode) {
   root.render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <App />
+      <BrowserRouter>
+        <QueryParamProvider adapter={ReactRouter6Adapter}>
+          <Routes>
+            <Route path="/ifs-editor" element={<App />} />
+          </Routes>
+        </QueryParamProvider>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
