@@ -22,7 +22,7 @@
     "@typescript-eslint/parser": "^5.44.0",
     "@vitejs/plugin-react": "^3.0.0",
     "@vitest/coverage-c8": "^0.26.0",
-    "@vitest/ui": "^0.25.7",
+    "@vitest/ui": "^0.26.0",
     "eslint": "^8.27.0",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
