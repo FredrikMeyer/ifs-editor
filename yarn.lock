@@ -885,10 +885,10 @@
     c8 "^7.12.0"
     vitest "0.26.0"
 
-"@vitest/ui@^0.26.0":
-  version "0.26.0"
-  resolved "https://registry.yarnpkg.com/@vitest/ui/-/ui-0.26.0.tgz#e0c361902722b70d7b1ef1e821d87834b5e42389"
-  integrity sha512-aEThdF469KCaU8m0eQ3C8TRa1UOlDjHEdIzmqKdKrwYtZrDsx/CHTzb6wXjmr7L+ldHyCctkss7uNTlMXRQjtg==
+"@vitest/ui@^0.26.2":
+  version "0.26.2"
+  resolved "https://registry.yarnpkg.com/@vitest/ui/-/ui-0.26.2.tgz#9ae81bb760b2614ecf38047a3c536a3452bd9f7d"
+  integrity sha512-DMQhooGJVWjkiKIWJqbprDynDbw/anG2An5PxyDqLuzpGX0MWnDLNxON8wneDtDIX3kCptzRWTVMAxaV/S8EoQ==
   dependencies:
     fast-glob "^3.2.12"
     flatted "^3.2.7"
