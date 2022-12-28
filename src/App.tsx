@@ -22,7 +22,12 @@ import {
   variations,
 } from "./ifs";
 import { examples, exampleNames, Examples } from "./ifsExamples";
-import { createEnumParam, useQueryParam, withDefault } from "use-query-params";
+import {
+  BooleanParam,
+  createEnumParam,
+  useQueryParam,
+  withDefault,
+} from "use-query-params";
 
 const EqParam = withDefault(
   createEnumParam<Examples>([...exampleNames]),
@@ -35,6 +40,9 @@ const VariationParam = withDefault(
   ),
   "None"
 );
+
+const ShowAxesParam = withDefault(BooleanParam, true);
+const ColorPointsParam = withDefault(BooleanParam, false);
 
 type Variations = keyof typeof variations;
 
@@ -118,8 +126,11 @@ function App() {
     return iterator.getPoints(iterations);
   }, [equationChoice.equation, iterations]);
 
-  const [showAxes, setShowAxes] = React.useState(true);
-  const [colorPoints, setColorPoints] = React.useState(false);
+  const [showAxes, setShowAxes] = useQueryParam("eqName", ShowAxesParam);
+  const [colorPoints, setColorPoints] = useQueryParam(
+    "colorPoints",
+    ColorPointsParam
+  );
 
   return (
     <>

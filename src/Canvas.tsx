@@ -5,6 +5,12 @@ import { View } from "./ifs";
 import { Button, Slider, Stack, Box, Typography, Grid } from "@mui/material";
 import { Drawer } from "./Drawer";
 import { Color } from "./colors";
+import {
+  JsonParam,
+  NumericObjectParam,
+  useQueryParam,
+  withDefault,
+} from "use-query-params";
 
 function useWindowSize() {
   // From https://usehooks.com/useWindowSize/
@@ -70,11 +76,12 @@ export default function Canvas({
   startingView,
 }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [view, setView] = React.useState(startingView);
+  const ViewParam = withDefault<View, View>(NumericObjectParam, startingView);
+  const [view, setView] = useQueryParam("v", ViewParam);
 
   React.useEffect(() => {
     setView(startingView);
-  }, [startingView]);
+  }, [startingView, setView]);
 
   const drawer = useDrawer(view);
 
