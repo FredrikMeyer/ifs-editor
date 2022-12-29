@@ -5,12 +5,7 @@ import { View } from "./ifs";
 import { Button, Slider, Stack, Box, Typography, Grid } from "@mui/material";
 import { Drawer } from "./Drawer";
 import { Color } from "./colors";
-import {
-  JsonParam,
-  NumericObjectParam,
-  useQueryParam,
-  withDefault,
-} from "use-query-params";
+import { NumberParam, useQueryParam, withDefault } from "use-query-params";
 
 function useWindowSize() {
   // From https://usehooks.com/useWindowSize/
@@ -62,6 +57,47 @@ function useDrawer(view: View) {
   return drawer;
 }
 
+function useViewParams(
+  defaultView: View
+): readonly [View, (v: View | ((oldView: View) => View)) => void] {
+  const [xMin, setMinX] = useQueryParam(
+    "xMin",
+    withDefault(NumberParam, defaultView.xMin)
+  );
+  const [xMax, setMaxX] = useQueryParam(
+    "xMax",
+    withDefault(NumberParam, defaultView.xMax)
+  );
+  const [yMin, setMinY] = useQueryParam(
+    "yMin",
+    withDefault(NumberParam, defaultView.yMin)
+  );
+  const [yMax, setMaxY] = useQueryParam(
+    "yMax",
+    withDefault(NumberParam, defaultView.yMax)
+  );
+
+  const setView = React.useCallback(
+    (arg: View | ((oldView: View) => View)) => {
+      const {
+        xMax: xMaxNew,
+        xMin: xMinNew,
+        yMax: yMaxNew,
+        yMin: yMinNew,
+      } = arg instanceof Function
+        ? arg({ xMin, xMax, yMax, yMin })
+        : { xMax: arg.xMax, xMin: arg.xMin, yMax: arg.yMax, yMin: arg.yMin };
+
+      setMinX(xMinNew);
+      setMaxX(xMaxNew);
+      setMinY(yMinNew);
+      setMaxY(yMaxNew);
+    },
+    [setMaxX, setMinX, setMaxY, setMinY, xMax, xMin, yMin, yMax]
+  );
+  return [{ xMax, xMin, yMin, yMax }, setView];
+}
+
 interface CanvasProps {
   startingView: View;
   showAxes: boolean;
@@ -76,14 +112,8 @@ export default function Canvas({
   startingView,
 }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const ViewParam = withDefault<View, View>(NumericObjectParam, startingView);
-  const [view, setView] = useQueryParam("v", ViewParam);
-
-  React.useEffect(() => {
-    setView(startingView);
-  }, [startingView, setView]);
-
-  const drawer = useDrawer(view);
+  const [view, setView] = useViewParams(startingView);
+  const drawer = useDrawer(view as unknown as View);
 
   const [mousePos, setMousePos] = React.useState<[number, number]>([0, 0]);
 
