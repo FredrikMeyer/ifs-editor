@@ -1,5 +1,6 @@
 import React from "react";
-import { Typography, Slider, Link, AppBar, Toolbar } from "@mui/material";
+import { FaGithubSquare } from "react-icons/fa";
+import { Typography, Slider, Link, AppBar, Toolbar, Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
@@ -133,10 +134,21 @@ function App() {
   );
 
   return (
-    <>
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h1">Iterated Function System</Typography>
+          <Typography variant="h1" sx={{ flexGrow: 1 }}>
+            Iterated Function System
+          </Typography>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            sx={{ mr: 2 }}
+            href="https://github.com/FredrikMeyer/ifs-editor"
+          >
+            <FaGithubSquare />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <main>
@@ -263,7 +275,7 @@ function App() {
           </Grid>
         </Grid>
       </main>
-    </>
+    </Box>
   );
 }
 
