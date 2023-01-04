@@ -2,7 +2,17 @@ import React from "react";
 import { useRef } from "react";
 import { ColoredPoint } from "./util";
 import { View } from "./ifs";
-import { Button, Slider, Stack, Box, Typography, Grid } from "@mui/material";
+import {
+  Button,
+  Slider,
+  Stack,
+  Box,
+  Typography,
+  Grid,
+  IconButton,
+} from "@mui/material";
+import ZoomInIcon from "@mui/icons-material/ZoomIn";
+import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import { Drawer } from "./Drawer";
 import { Color } from "./colors";
 import { NumberParam, useQueryParam, withDefault } from "use-query-params";
@@ -131,13 +141,9 @@ export default function Canvas({
     return () => window.cancelAnimationFrame(requestId || 0);
   }, [drawer, mousePos, points, showAxes, useColors]);
 
-  const onCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
-    const pos = drawer.getCursorPosition(
-      canvasRef.current as HTMLCanvasElement,
-      event
-    );
+  const zoom = (factor: number, newCenter: [number, number]) => {
     const oldCenterX = 0.5 * (view.xMax + view.xMin);
-    const [x, y] = pos;
+    const [x, y] = newCenter;
     const diffx = x - oldCenterX;
     const newxMax = view.xMax + diffx;
     const newxMin = view.xMin + diffx;
@@ -147,11 +153,10 @@ export default function Canvas({
     const newyMax = view.yMax + diffy;
     const newyMin = view.yMin + diffy;
 
-    const k = event.shiftKey ? 1 / 0.9 : 0.9;
-    const newxMaxScaled = k * newxMax - x * k + x;
-    const newxMinScaled = k * newxMin - x * k + x;
-    const newyMaxScaled = k * newyMax - y * k + y;
-    const newyMinScaled = k * newyMin - y * k + y;
+    const newxMaxScaled = factor * newxMax - x * factor + x;
+    const newxMinScaled = factor * newxMin - x * factor + x;
+    const newyMaxScaled = factor * newyMax - y * factor + y;
+    const newyMinScaled = factor * newyMin - y * factor + y;
 
     setView({
       xMax: newxMaxScaled,
@@ -159,6 +164,28 @@ export default function Canvas({
       yMin: newyMinScaled,
       yMax: newyMaxScaled,
     });
+  };
+
+  const zoomIn = () => {
+    const centerX = 0.5 * (view.xMax + view.xMin);
+    const centerY = 0.5 * (view.yMax + view.yMin);
+    zoom(0.9, [centerX, centerY]);
+  };
+
+  const zoomOut = () => {
+    const centerX = 0.5 * (view.xMax + view.xMin);
+    const centerY = 0.5 * (view.yMax + view.yMin);
+    zoom(1 / 0.9, [centerX, centerY]);
+  };
+
+  const onCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    const pos = drawer.getCursorPosition(
+      canvasRef.current as HTMLCanvasElement,
+      event
+    );
+    const k = event.shiftKey ? 1 / 0.9 : 0.9;
+
+    zoom(k, pos);
   };
 
   const onResetZoom = () => {
@@ -209,7 +236,21 @@ export default function Canvas({
 
   return (
     <Grid container direction="column" sx={{ marginLeft: "10px" }}>
-      <Grid item>
+      <Grid item sx={{ position: "relative" }}>
+        <div style={{ position: "absolute", right: "50px", bottom: "50px" }}>
+          <div>
+            <div>
+              <IconButton onClick={zoomIn}>
+                <ZoomInIcon />
+              </IconButton>
+            </div>
+            <div>
+              <IconButton onClick={zoomOut}>
+                <ZoomOutIcon />
+              </IconButton>
+            </div>
+          </div>
+        </div>
         <canvas
           className="canvas"
           onClick={(event) => onCanvasClick(event)}

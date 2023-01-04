@@ -27,7 +27,7 @@ Get test coverage by adding `--coverage`.
 ### Colors
 
  - [Useful color conversion formulas](https://color.lukas-stratmann.com/color-systems/hsl.html)
-
+-
 ### Fractals
 
  - [Intro to fractals](https://users.math.yale.edu/public_html/People/frame/Fractals/Labs/IFSLab/IFSLab.html)
@@ -79,3 +79,4 @@ Or perhaps AssemblyScript? Example [here](https://www.assemblyscript.org/example
  - [Fractal-Inferno](https://github.com/tariqksoliman/Fractal-Inferno) Implements the Flame algorithm in JS.
  - [py-fractal](https://github.com/pysrc/fractal) Fractals drawn in Python.
  - [glChAoS.P](https://github.com/BrutPitt/glChAoS.P "C++ project/app or generating many types of fractals")
+ - [https://cs.lmu.edu/~ray/notes/ifs/](Iterated Function Systems - Ray Toal) Lots of examples.
