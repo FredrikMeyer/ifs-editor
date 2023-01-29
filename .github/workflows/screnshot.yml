@@ -19,7 +19,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: yarn install --frozen-lockfile
-    - name: Run web pakge on port 5173 
+    - name: Run web page on port 5173 
       run: yarn start &
     - name: install puppeteer-headful
       uses: mujo-code/puppeteer-headful@master # Required for headful puppeteer
@@ -28,7 +28,7 @@ jobs:
     - name: screenshots-ci-action
       uses: flameddd/screenshots-ci-action@master
       with:
-        url: https://localhost:5173
+        url: http://localhost:5173
         devices: iPhone 6,iPhone 6 landscape,Nexus 7,Pad Pro,Galaxy S III landscape,iPad Pro landscape
     - uses: actions/upload-artifact@v2 # Uplaod screenshots to Actions Artifacts via actions/upload-artifact@v2
       with:
