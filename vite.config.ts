@@ -26,7 +26,7 @@ export default defineConfig(async ({ command, mode }) => {
     test: {
       includeSource: ["src/**/*.ts*"],
       coverage: {
-        reporter: ["text", "html"],
+        reporter: ["text", "json"],
       },
     },
     define: {
