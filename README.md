@@ -1,5 +1,7 @@
 # IFS Editor
 
+[![codecov](https://codecov.io/gh/FredrikMeyer/ifs-editor/branch/master/graph/badge.svg?token=27KZGYYA4R)](https://codecov.io/gh/FredrikMeyer/ifs-editor)
+
 Inspired by [this page](http://paulbourke.net/fractals/ifs/).
 
 Try it [here](https://blog.fredrikmeyer.net/ifs-editor/).
