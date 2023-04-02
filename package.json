@@ -35,7 +35,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.5",
-    "@mui/icons-material": "^5.11.0",
+    "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.12",
     "katex": "^0.16.4",
     "react": "^18.0.0",
