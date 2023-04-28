@@ -958,12 +958,14 @@
   dependencies:
     tinyspy "^2.1.0"
 
-"@vitest/ui@^0.29.7":
-  version "0.29.7"
-  resolved "https://registry.yarnpkg.com/@vitest/ui/-/ui-0.29.7.tgz#24f756f395f45e0c8a3fb10d6d1e472bd0197a28"
-  integrity sha512-KeOztcAldlFU5i8DKCQcmGrih1dVowurZy/9iPz5JyQdPJzej+nW1nI4nYvc4ZmUtA8+IAe9uViqnU7IXc1RNw==
+"@vitest/ui@^0.30.1":
+  version "0.30.1"
+  resolved "https://registry.yarnpkg.com/@vitest/ui/-/ui-0.30.1.tgz#49962a47aa42dad5e80fc2e2697958849e0310a1"
+  integrity sha512-Izz4ElDmdvX02KImSC2nCJI6CsGo9aETbKqxli55M0rbbPPAMtF0zDcJIqgEP5V6Y+4Ysf6wvsjLbLCTnaBvKw==
   dependencies:
+    "@vitest/utils" "0.30.1"
     fast-glob "^3.2.12"
+    fflate "^0.7.4"
     flatted "^3.2.7"
     pathe "^1.1.0"
     picocolors "^1.0.0"
@@ -1623,6 +1625,11 @@ fastq@^1.6.0:
   integrity sha512-YpkpUnK8od0o1hmeSc7UUs/eB/vIPWJYjKck2QKIzAf71Vm1AAQ3EbuZB3g2JIy+pg+ERD0vqI79KyZiB2e2Nw==
   dependencies:
     reusify "^1.0.4"
+
+fflate@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.7.4.tgz#61587e5d958fdabb5a9368a302c25363f4f69f50"
+  integrity sha512-5u2V/CDW15QM1XbbgS+0DfPxVB+jUKhWEKuuFuHncbk3tEEqzmoXL+2KyOFuKGqOnmdIy0/davWF1CkuwtibCw==
 
 file-entry-cache@^6.0.1:
   version "6.0.1"
