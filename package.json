@@ -36,7 +36,7 @@
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.13.3",
+    "@mui/material": "^5.13.4",
     "katex": "^0.16.7",
     "react": "^18.0.0",
     "react-colorful": "^5.6.1",
