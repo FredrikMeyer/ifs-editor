@@ -145,7 +145,7 @@ function App() {
             edge="start"
             color="inherit"
             sx={{ mr: 2 }}
-            href="https://github.com/FredrikMeyer/ifs-editor"
+            href={`https://github.com/FredrikMeyer/ifs-editor/commit/${__COMMIT_HASH__}`}
           >
             <FaGithubSquare />
           </IconButton>
