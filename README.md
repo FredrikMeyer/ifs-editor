@@ -72,7 +72,7 @@ Or perhaps AssemblyScript? Example [here](https://www.assemblyscript.org/example
 ### TODOS
 
  - Add animation on parameters (i.e. let a parameter animate from 0 to max value)
- - Save nice fractals
+ - Save nice fractals to image
  - Support for other fractals than IFS
  - Tighter UI (components are a bit big now, less clicking)
 
