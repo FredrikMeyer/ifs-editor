@@ -81,4 +81,4 @@ Or perhaps AssemblyScript? Example [here](https://www.assemblyscript.org/example
  - [Fractal-Inferno](https://github.com/tariqksoliman/Fractal-Inferno) Implements the Flame algorithm in JS.
  - [py-fractal](https://github.com/pysrc/fractal) Fractals drawn in Python.
  - [glChAoS.P](https://github.com/BrutPitt/glChAoS.P "C++ project/app or generating many types of fractals")
- - (Iterated Function Systems - Ray Toal)[https://cs.lmu.edu/~ray/notes/ifs/] Lots of examples.
+ - [Iterated Function Systems - Ray Toal](https://cs.lmu.edu/~ray/notes/ifs/) Lots of examples.
