@@ -1,56 +1,56 @@
 body {
-    padding:  0px;
+  padding: 0px;
 }
 
 .inspired-by {
-    padding-top: 10px;
+  padding-top: 10px;
 }
 
 .settingsAndCanvas {
-    display: flex;
+  display: flex;
 }
 
 .settings {
-    padding: 10px;
+  padding: 10px;
 }
 
 .iterationsSlider {
-    width: 300px;
+  width: 300px;
 }
 
 .canvas {
-    border: 1px solid black;
-    margin: 10px;
+  border: 1px solid black;
+  margin: 10px;
 }
 
 .equation-selector {
-    width: 100%;
+  width: 100%;
 }
 
 .coefficientSet {
-    width: 300px;
+  width: 300px;
 }
 
 .coefficientSet .deleteIcon {
-    float: right;
+  float: right;
 }
 
 .equationHeader {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 }
 
 .equationContent {
-    width: 100%;
+  width: 100%;
 }
 
 .coefficients {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .selectAndAdd {
-    display: flex;
-    justify-content: flex-start;
+  display: flex;
+  justify-content: flex-start;
 }

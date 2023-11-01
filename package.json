@@ -7,7 +7,7 @@
     "build": "tsc && vite build",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "prettier": "prettier .",
+    "prettier:run": "prettier . --check",
     "lint": "eslint --ext .tsx --ext .ts src/",
     "typecheck": "tsc --noEmit"
   },

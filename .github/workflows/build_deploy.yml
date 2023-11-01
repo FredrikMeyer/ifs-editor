@@ -5,9 +5,9 @@ name: Build+deploy
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 permissions:
   contents: read
@@ -24,30 +24,30 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup Pages
-      id: pages
-      uses: actions/configure-pages@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: yarn install --frozen-lockfile
-    - run: yarn typecheck
-    - run: yarn prettier
-    - run: yarn lint
-    - run: yarn test
-    - run: yarn vitest run --coverage
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        directory: ./coverage
-    - run: yarn build
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v1
-      with:
-        path: ./docs
+      - uses: actions/checkout@v3
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: yarn install --frozen-lockfile
+      - run: yarn typecheck
+      - run: yarn prettier:run
+      - run: yarn lint
+      - run: yarn test
+      - run: yarn vitest run --coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ./coverage
+      - run: yarn build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./docs
 
   # Deployment job
   deploy:
@@ -63,4 +63,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1        
+        uses: actions/deploy-pages@v1

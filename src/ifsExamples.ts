@@ -10,7 +10,7 @@ export const exampleNames = [
   "barnsley",
   "blackSpleenwort",
 ] as const;
-export type Examples = typeof exampleNames[number];
+export type Examples = (typeof exampleNames)[number];
 
 export const examples: Record<Examples, IFSEquation> = {
   eq1: {

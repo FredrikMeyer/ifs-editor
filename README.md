@@ -28,12 +28,13 @@ Get test coverage by adding `--coverage`.
 
 ### Colors
 
- - [Useful color conversion formulas](https://color.lukas-stratmann.com/color-systems/hsl.html)
+- [Useful color conversion formulas](https://color.lukas-stratmann.com/color-systems/hsl.html)
 -
+
 ### Fractals
 
- - [Intro to fractals](https://users.math.yale.edu/public_html/People/frame/Fractals/Labs/IFSLab/IFSLab.html)
- - [Image Based Rendering of Iterated Function Systems](https://www.uni-konstanz.de/mmsp/pubsys/publishedFiles/WiSa04.pdf) Another algorithm to generate IFS's. The references also refers to more efficient methods to generate IFS. See [here](https://www.win.tue.nl/~vanwijk/ibifs/) for more.
+- [Intro to fractals](https://users.math.yale.edu/public_html/People/frame/Fractals/Labs/IFSLab/IFSLab.html)
+- [Image Based Rendering of Iterated Function Systems](https://www.uni-konstanz.de/mmsp/pubsys/publishedFiles/WiSa04.pdf) Another algorithm to generate IFS's. The references also refers to more efficient methods to generate IFS. See [here](https://www.win.tue.nl/~vanwijk/ibifs/) for more.
 
 ## Ideas / links
 
@@ -41,7 +42,7 @@ Get test coverage by adding `--coverage`.
 
 [Fractal Flame Algorithm](https://flam3.com/flame_draves.pdf)
 
-Would want to implement the ideas in this paper. 
+Would want to implement the ideas in this paper.
 
 ### Larry Riddle's home page
 
@@ -67,18 +68,18 @@ Or perhaps AssemblyScript? Example [here](https://www.assemblyscript.org/example
 
 ### Fracal Exercises
 
- - [Identify the IFS from the fractal](https://users.math.yale.edu/public_html/People/frame/Fractals/Labs/IFSLab/IFSLab.html)
+- [Identify the IFS from the fractal](https://users.math.yale.edu/public_html/People/frame/Fractals/Labs/IFSLab/IFSLab.html)
 
 ### TODOS
 
- - Add animation on parameters (i.e. let a parameter animate from 0 to max value)
- - Save nice fractals to image
- - Support for other fractals than IFS
- - Tighter UI (components are a bit big now, less clicking)
+- Add animation on parameters (i.e. let a parameter animate from 0 to max value)
+- Save nice fractals to image
+- Support for other fractals than IFS
+- Tighter UI (components are a bit big now, less clicking)
 
 ## Similar Projects
 
- - [Fractal-Inferno](https://github.com/tariqksoliman/Fractal-Inferno) Implements the Flame algorithm in JS.
- - [py-fractal](https://github.com/pysrc/fractal) Fractals drawn in Python.
- - [glChAoS.P](https://github.com/BrutPitt/glChAoS.P "C++ project/app or generating many types of fractals")
- - [Iterated Function Systems - Ray Toal](https://cs.lmu.edu/~ray/notes/ifs/) Lots of examples.
+- [Fractal-Inferno](https://github.com/tariqksoliman/Fractal-Inferno) Implements the Flame algorithm in JS.
+- [py-fractal](https://github.com/pysrc/fractal) Fractals drawn in Python.
+- [glChAoS.P](https://github.com/BrutPitt/glChAoS.P "C++ project/app or generating many types of fractals")
+- [Iterated Function Systems - Ray Toal](https://cs.lmu.edu/~ray/notes/ifs/) Lots of examples.
