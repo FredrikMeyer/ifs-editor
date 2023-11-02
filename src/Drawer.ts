@@ -11,7 +11,7 @@ interface DrawerOptions {
 function toWorldCoords(
   options: DrawerOptions,
   view: View,
-  point: Point
+  point: Point,
 ): [number, number] {
   const { x, y } = point;
   const { width, height } = options;
@@ -25,14 +25,14 @@ function toWorldCoords(
 function canvasCoordsToImageDataIndex(
   canvasWidth: number,
   x: number,
-  y: number
+  y: number,
 ): number {
   return y * canvasWidth + x;
 }
 
 function imageDataIndexToCoords(
   index: number,
-  canvasWidth: number
+  canvasWidth: number,
 ): [number, number] {
   const x = index % canvasWidth;
   const y = (index - x) / canvasWidth;
@@ -42,10 +42,10 @@ function imageDataIndexToCoords(
 
 function makeHistogram(
   drawerOptions: DrawerOptions,
-  points: Point[]
+  points: Point[],
 ): { histogram: number[]; max: number } {
   const histogram = new Array<number>(
-    drawerOptions.width * drawerOptions.height
+    drawerOptions.width * drawerOptions.height,
   );
   let max = 0;
   points.forEach(({ x, y }) => {
@@ -68,7 +68,7 @@ function makeHistogram(
 function toCanvasCoords(
   canvasOptions: DrawerOptions,
   view: View,
-  point: Point
+  point: Point,
 ): [number, number] {
   const { x, y } = point;
   const { width, height } = canvasOptions;
@@ -88,7 +88,7 @@ function computeBrightnesses(histogram: number[], max: number) {
 
 function getTransformedColors(
   coloredPoints: ColoredPoint<Color>[],
-  canvasOptions: DrawerOptions
+  canvasOptions: DrawerOptions,
 ): ColoredPoint<HSLColor>[] {
   const { max, histogram } = makeHistogram(canvasOptions, coloredPoints);
 
@@ -112,7 +112,7 @@ function getTransformedColors(
 }
 
 function coloredPointsToRGB(
-  coloredPoints: ColoredPoint<Color>[]
+  coloredPoints: ColoredPoint<Color>[],
 ): ColoredPoint<RGBColor>[] {
   return coloredPoints.map((c) => ({
     ...c,
@@ -134,7 +134,7 @@ export class Drawer {
     coloredPoints: ColoredPoint<Color>[],
     mousePos: [number, number],
     showAxes: boolean,
-    colorPoints: boolean
+    colorPoints: boolean,
   ) {
     // todo: bruk window.devicePixelRatio
     /* canvas.width = 2 * WIDTH; */
@@ -234,13 +234,13 @@ export class Drawer {
     ctx.fillText(
       `[x,y]: [${mousePos[0].toFixed(2)}, ${mousePos[1].toFixed(2)}]`,
       10,
-      80
+      80,
     );
   }
 
   public getCursorPosition(
     canvas: HTMLCanvasElement,
-    event: MouseEvent<HTMLCanvasElement>
+    event: MouseEvent<HTMLCanvasElement>,
   ): [number, number] {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -296,7 +296,7 @@ if (import.meta.vitest) {
     const [a, b] = toCanvasCoords(
       { width: 5, height: 5 },
       { xMin: 0, xMax: 5, yMax: 5, yMin: 0 },
-      { x: 1, y: 1 }
+      { x: 1, y: 1 },
     );
 
     expect([a, b]).toEqual([1, 4]);
@@ -310,7 +310,7 @@ if (import.meta.vitest) {
     const [a, b] = toCanvasCoords(
       { width: 10, height: 10 },
       { xMin: -5, xMax: 5, yMin: -5, yMax: 5 },
-      p
+      p,
     );
 
     expect([a, b]).toEqual([9, 1]);
@@ -328,7 +328,7 @@ if (import.meta.vitest) {
 
     const { histogram, max } = makeHistogram(
       { width: width, height: width },
-      points
+      points,
     );
 
     expect(max).toEqual(3);

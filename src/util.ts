@@ -31,7 +31,7 @@ export function probToIndex(probs: number[], prob: number) {
 export function mapInterval(
   fromInterval: Interval,
   toInterval: Interval,
-  x: number
+  x: number,
 ) {
   const [A, B] = fromInterval;
   const [C, D] = toInterval;
@@ -56,7 +56,7 @@ export function mapFromInterval(
   b: number,
   c: number,
   d: number,
-  x: number
+  x: number,
 ) {
   return ((d - c) / (b - a)) * (x - a) + c;
 }
@@ -106,7 +106,7 @@ if (import.meta.vitest) {
         [1, 2],
         [2, 2],
         [2.5, 1],
-      ])
+      ]),
     );
   });
 
