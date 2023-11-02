@@ -35,6 +35,6 @@ if (mountNode) {
           </Routes>
         </QueryParamProvider>
       </BrowserRouter>
-    </ThemeProvider>
+    </ThemeProvider>,
   );
 }

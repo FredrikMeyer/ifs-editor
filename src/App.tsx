@@ -32,14 +32,14 @@ import {
 
 const EqParam = withDefault(
   createEnumParam<Examples>([...exampleNames]),
-  exampleNames[0]
+  exampleNames[0],
 );
 
 const VariationParam = withDefault(
   createEnumParam<Variations | "None">(
-    Object.keys(variations) as unknown as Variations[]
+    Object.keys(variations) as unknown as Variations[],
   ),
-  "None"
+  "None",
 );
 
 const ShowAxesParam = withDefault(BooleanParam, true);
@@ -76,7 +76,7 @@ function App() {
   };
 
   const handleSelectVariation = (
-    event: SelectChangeEvent<keyof typeof variations | "None">
+    event: SelectChangeEvent<keyof typeof variations | "None">,
   ) => {
     const val = event.target.value as keyof typeof variations | "None";
 
@@ -130,7 +130,7 @@ function App() {
   const [showAxes, setShowAxes] = useQueryParam("eqName", ShowAxesParam);
   const [colorPoints, setColorPoints] = useQueryParam(
     "colorPoints",
-    ColorPointsParam
+    ColorPointsParam,
   );
 
   return (

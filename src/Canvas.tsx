@@ -57,34 +57,34 @@ function useDrawer(view: View) {
   const { width, height } = useWindowSize();
   const canvasSize = React.useMemo(
     () => computeCanvasSize(width, height),
-    [height, width]
+    [height, width],
   );
   const drawer = React.useMemo(
     () => new Drawer(canvasSize, view),
-    [view, canvasSize]
+    [view, canvasSize],
   );
 
   return drawer;
 }
 
 function useViewParams(
-  defaultView: View
+  defaultView: View,
 ): readonly [View, (v: View | ((oldView: View) => View)) => void] {
   const [xMin, setMinX] = useQueryParam(
     "xMin",
-    withDefault(NumberParam, defaultView.xMin)
+    withDefault(NumberParam, defaultView.xMin),
   );
   const [xMax, setMaxX] = useQueryParam(
     "xMax",
-    withDefault(NumberParam, defaultView.xMax)
+    withDefault(NumberParam, defaultView.xMax),
   );
   const [yMin, setMinY] = useQueryParam(
     "yMin",
-    withDefault(NumberParam, defaultView.yMin)
+    withDefault(NumberParam, defaultView.yMin),
   );
   const [yMax, setMaxY] = useQueryParam(
     "yMax",
-    withDefault(NumberParam, defaultView.yMax)
+    withDefault(NumberParam, defaultView.yMax),
   );
 
   const setView = React.useCallback(
@@ -103,7 +103,7 @@ function useViewParams(
       setMinY(yMinNew);
       setMaxY(yMaxNew);
     },
-    [setMaxX, setMinX, setMaxY, setMinY, xMax, xMin, yMin, yMax]
+    [setMaxX, setMinX, setMaxY, setMinY, xMax, xMin, yMin, yMax],
   );
   return [{ xMax, xMin, yMin, yMax }, setView];
 }
@@ -181,7 +181,7 @@ export default function Canvas({
   const onCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
     const pos = drawer.getCursorPosition(
       canvasRef.current as HTMLCanvasElement,
-      event
+      event,
     );
     const k = event.shiftKey ? 1 / 0.9 : 0.9;
 
@@ -195,7 +195,7 @@ export default function Canvas({
   const handleXSlider = (
     _: Event,
     value: number | number[],
-    activeThumb: number
+    activeThumb: number,
   ) => {
     const [a, b] = value as number[];
     if (activeThumb === 0) {
@@ -216,7 +216,7 @@ export default function Canvas({
   const handleYSlider = (
     _: Event,
     value: number | number[],
-    activeThumb: number
+    activeThumb: number,
   ) => {
     const [a, b] = value as number[];
     if (activeThumb === 0) {
