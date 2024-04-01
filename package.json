@@ -17,7 +17,7 @@
   "author": "Fredrik Meyer",
   "license": "ISC",
   "devDependencies": {
-    "@types/katex": "^0.16.2",
+    "@types/katex": "^0.16.7",
     "@types/node": "^20.11.24",
     "@types/react": "^18.2.51",
     "@types/react-dom": "^18.2.18",
