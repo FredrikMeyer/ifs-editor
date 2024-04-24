@@ -78,7 +78,7 @@ function Coefficient(props: {
 }) {
   const { coeff, probability, index, onUpdateCoefficient } = props;
 
-  const entries = Object.entries(props.coeff);
+  const entries = Object.entries(props.coeff) as [string, number][];
 
   const coeffs = entries.map((e) => (
     <SingleCoefficent
