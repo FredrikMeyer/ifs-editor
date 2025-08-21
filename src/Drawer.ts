@@ -81,9 +81,10 @@ function toCanvasCoords(
 }
 
 function computeBrightnesses(histogram: number[], max: number) {
+  const maxAdjusted = Math.floor(max * 0.8);
   return histogram
-    .map((v) => Math.log(v) / Math.log(max))
-    .map((v) => mapFromInterval(0, 1, 0.9, 0.5, v));
+    .map((v) => Math.log(v))
+    .map((v) => mapFromInterval(0, Math.log(max), 0.9, 0.4, v));
 }
 
 function getTransformedColors(
