@@ -127,6 +127,10 @@ export default function Canvas({
 
   const [mousePos, setMousePos] = React.useState<[number, number]>([0, 0]);
 
+  const [dragStart, setDragStart] = React.useState<
+    undefined | [number, number]
+  >(undefined);
+
   React.useEffect(() => {
     const canvas = canvasRef.current;
     let requestId: number | null = null;
@@ -163,6 +167,20 @@ export default function Canvas({
       xMin: newxMinScaled,
       yMin: newyMinScaled,
       yMax: newyMaxScaled,
+    });
+  };
+
+  const move = (by: [number, number]) => {
+    const [diffX, diffY] = by;
+
+    const deltaX = diffX;
+    const deltaY = -diffY;
+
+    setView({
+      xMax: view.xMax - deltaX,
+      xMin: view.xMin - deltaX,
+      yMin: view.yMin - deltaY,
+      yMax: view.yMax - deltaY,
     });
   };
 
@@ -233,7 +251,6 @@ export default function Canvas({
       });
     }
   };
-
   return (
     <Grid container direction="column" sx={{ marginLeft: "10px" }}>
       <Grid sx={{ position: "relative" }}>
@@ -253,11 +270,33 @@ export default function Canvas({
         </div>
         <canvas
           className="canvas"
-          onClick={(event) => onCanvasClick(event)}
+          onClick={(event) => {
+            if (!dragStart) {
+              onCanvasClick(event);
+            }
+          }}
+          onMouseDown={(event) => {
+            if (canvasRef.current) {
+              setDragStart(drawer.getCursorPosition(canvasRef.current, event));
+            }
+          }}
+          onMouseUp={() => {
+            setDragStart(undefined);
+          }}
           onMouseMove={(e) => {
             if (canvasRef.current) {
-              setMousePos(drawer.getCursorPosition(canvasRef.current, e));
+              const currentPos = drawer.getCursorPosition(canvasRef.current, e);
+              setMousePos(currentPos);
+              if (dragStart) {
+                const [posX, posY] = currentPos;
+                const [sx, sy] = dragStart;
+                const by: [number, number] = [posX - sx, posY - sy];
+                move(by);
+              }
             }
+          }}
+          onMouseLeave={() => {
+            setDragStart(undefined);
           }}
           ref={canvasRef}
         ></canvas>
