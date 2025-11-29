@@ -68,17 +68,17 @@ function App() {
   });
 
   const handleSelectEquation = (event: SelectChangeEvent<Examples>) => {
-    setEquationName(event.target.value as Examples);
+    setEquationName(event.target.value);
     setEquationChoice((old) => ({
       ...old,
-      equation: examples[event.target.value as Examples],
+      equation: examples[event.target.value],
     }));
   };
 
   const handleSelectVariation = (
     event: SelectChangeEvent<keyof typeof variations | "None">,
   ) => {
-    const val = event.target.value as keyof typeof variations | "None";
+    const val = event.target.value;
 
     setVariation(val);
     setEquationChoice((old) => ({
@@ -153,7 +153,7 @@ function App() {
       </AppBar>
       <main>
         <Grid container justifyContent="space-between" spacing={2}>
-          <Grid item xs="auto">
+          <Grid size="auto">
             <Canvas
               points={points}
               startingView={equationChoice.equation.defaultView}
@@ -161,7 +161,7 @@ function App() {
               showAxes={showAxes}
             ></Canvas>
           </Grid>
-          <Grid item xs>
+          <Grid size="grow">
             <div style={{ padding: "5px" }}>
               Iterated Function Systems are a type of fractals. See{" "}
               <Link href="https://en.wikipedia.org/wiki/Iterated_function_system">

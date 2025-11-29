@@ -34,10 +34,10 @@ function SingleCoefficent(props: {
   return (
     <div>
       <Grid container spacing={1} alignItems="center">
-        <Grid item>
+        <Grid>
           <Typography id={id}>{props.name}</Typography>
         </Grid>
-        <Grid item xs>
+        <Grid size="grow">
           <Slider
             aria-labelledby={id}
             value={props.value}
@@ -48,7 +48,7 @@ function SingleCoefficent(props: {
             size="small"
           />
         </Grid>
-        <Grid item>
+        <Grid>
           <Input
             style={{ width: "100px" }}
             value={props.value}

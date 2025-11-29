@@ -236,7 +236,7 @@ export default function Canvas({
 
   return (
     <Grid container direction="column" sx={{ marginLeft: "10px" }}>
-      <Grid item sx={{ position: "relative" }}>
+      <Grid sx={{ position: "relative" }}>
         <div style={{ position: "absolute", right: "50px", bottom: "50px" }}>
           <div>
             <div>
@@ -262,20 +262,20 @@ export default function Canvas({
           ref={canvasRef}
         ></canvas>
       </Grid>
-      <Grid item>
+      <Grid>
         <Grid container spacing={2}>
-          <Grid item>
+          <Grid>
             <Button onClick={onResetZoom} variant="contained">
               Reset zoom
             </Button>
           </Grid>
-          <Grid item>
+          <Grid>
             <Typography sx={{ padding: "4px" }}>
               Zoom by clicking. Zoom out by shift-clicking.
             </Typography>
           </Grid>
         </Grid>
-        <Grid item>
+        <Grid>
           <Stack direction="row" spacing={3} sx={{ mb: 1 }} alignItems="center">
             <Box sx={{ width: "300px" }}>
               x
