@@ -19,9 +19,6 @@ export default tseslint.config(
         project: true,
         tsconfigRootDir: import.meta.dirname,
       },
-      globals: {
-        ...globals.browser,
-      },
     },
     files: ["**/*.ts", "**/*.tsx", "**/*.js"],
     ignores: [],
