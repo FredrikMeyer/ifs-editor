@@ -1,4 +1,3 @@
-import globals from "globals";
 import eslint from "@eslint/js";
 /* import eslintReact from "eslint-plugin-react/configs/recommended.js"; */
 /* import eslintReactJsx from "eslint-plugin-react/configs/jsx-runtime.js"; */
