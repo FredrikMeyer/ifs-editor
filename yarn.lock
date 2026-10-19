@@ -3529,7 +3529,7 @@ __metadata:
     eslint: "npm:^10.2.0"
     eslint-plugin-react: "npm:^7.37.5"
     eslint-plugin-react-hooks: "npm:^7.0.1"
-    katex: "npm:^0.16.45"
+    katex: "npm:^0.18.2"
     prettier: "npm:^3.8.1"
     process: "npm:^0.11.10"
     react: "npm:^19.2.4"
@@ -4150,14 +4150,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"katex@npm:^0.16.45":
-  version: 0.16.45
-  resolution: "katex@npm:0.16.45"
+"katex@npm:^0.18.2":
+  version: 0.18.2
+  resolution: "katex@npm:0.18.2"
   dependencies:
     commander: "npm:^8.3.0"
   bin:
     katex: cli.js
-  checksum: 10/8c82f9651c3615459722166a6ccb16f23ecd8323850a956568b69b1f641331a57679aa9f3ad4903c4be26089434cbbde850c0384b9b0dff022e4357b84a20ebc
+  checksum: 10/13c4c65ba80135d84fb2d34840092d191f3737a8d0623aadf70bd5d1cbcc091aa0e3e423123aa06ae8c518c35eb7c939461ff3740f9425998392d919f65bd063
   languageName: node
   linkType: hard
 
