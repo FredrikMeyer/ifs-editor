@@ -123,7 +123,7 @@ export default function Canvas({
 }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [view, setView] = useViewParams(startingView);
-  const drawer = useDrawer(view as unknown as View);
+  const drawer = useDrawer(view);
 
   const [mousePos, setMousePos] = React.useState<[number, number]>([0, 0]);
 
