@@ -152,11 +152,7 @@ function App() {
         </Toolbar>
       </AppBar>
       <main>
-        <Grid
-          container
-          spacing={2}
-          sx={{ justifyContent: "space-between" }}
-        >
+        <Grid container spacing={2} sx={{ justifyContent: "space-between" }}>
           <Grid size="auto">
             <Canvas
               points={points}
