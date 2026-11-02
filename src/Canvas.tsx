@@ -252,7 +252,7 @@ export default function Canvas({
     }
   };
   return (
-    <Grid container direction="column" sx={{ marginLeft: "10px" }}>
+    <Stack sx={{ marginLeft: "10px" }}>
       <Grid sx={{ position: "relative" }}>
         <div style={{ position: "absolute", right: "50px", bottom: "50px" }}>
           <div>
@@ -315,7 +315,11 @@ export default function Canvas({
           </Grid>
         </Grid>
         <Grid>
-          <Stack direction="row" spacing={3} sx={{ mb: 1 }} alignItems="center">
+          <Stack
+            direction="row"
+            spacing={3}
+            sx={{ mb: 1, alignItems: "center" }}
+          >
             <Box sx={{ width: "300px" }}>
               x
               <Slider
@@ -341,6 +345,6 @@ export default function Canvas({
           </Stack>
         </Grid>
       </Grid>
-    </Grid>
+    </Stack>
   );
 }

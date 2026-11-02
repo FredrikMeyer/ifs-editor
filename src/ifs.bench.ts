@@ -1,16 +1,16 @@
-import { bench, describe } from "vitest";
+import { describe, test } from "vitest";
 import { IFSIterator } from "./ifs";
 import { examples } from "./ifsExamples";
 import { mapInterval, mapFromInterval, Interval } from "./util";
 
 describe("ifs", () => {
-  bench.skip("mandelbrot-like", () => {
+  test.skip("mandelbrot-like", () => {
     const iterator = new IFSIterator(examples.eq1);
 
     iterator.getPoints(100_000);
   });
 
-  bench.skip("chaos", () => {
+  test.skip("chaos", () => {
     const iterator = new IFSIterator(examples.chaos);
 
     iterator.getPoints(100_000);
@@ -18,7 +18,7 @@ describe("ifs", () => {
 });
 
 describe("map interval", () => {
-  bench.skip("mapinterval", () => {
+  test.skip("mapinterval", () => {
     for (let i = 0; i < 1000; i++) {
       const a = [0, Math.random() * 5] as Interval;
       const b = [Math.random() + 6, Math.random() + 8] as Interval;
@@ -26,7 +26,7 @@ describe("map interval", () => {
     }
   });
 
-  bench.skip("mapinterval2", () => {
+  test.skip("mapinterval2", () => {
     for (let i = 0; i < 1000; i++) {
       const a = 0;
       const b = Math.random() * 5;

@@ -33,7 +33,7 @@ function SingleCoefficent(props: {
   const id = `${props.name}-slider`;
   return (
     <div>
-      <Grid container spacing={1} alignItems="center">
+      <Grid container spacing={1} sx={{ alignItems: "center" }}>
         <Grid>
           <Typography id={id}>{props.name}</Typography>
         </Grid>
@@ -93,7 +93,7 @@ function Coefficient(props: {
 
   return (
     <div className="coefficientSet">
-      <Accordion TransitionProps={{ timeout: 200 }}>
+      <Accordion slotProps={{ transition: { timeout: 200 } }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <div className="equationHeader">
             <Typography variant="h5">Index: {index}</Typography>
